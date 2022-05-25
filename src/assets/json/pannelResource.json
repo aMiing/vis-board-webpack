@@ -1,0 +1,26 @@
+[
+		{
+			"id":1,
+			"title":"测试屏幕",
+			"img":"../img/show.png",
+			"published":0,
+		},
+		{
+			"id":2,
+			"title":"我寄几的屏幕",
+			"img":"../img/1.jpg",
+			"published":0,
+		},
+		{
+			"id":3,
+			"title":"神马看板",
+			"img":"../img/2.jpg",
+			"published":0,
+		},
+		{
+			"id":4,
+			"title":"测试专用",
+			"img":"../img/3.jpg",
+			"published":0,
+		}
+	]
