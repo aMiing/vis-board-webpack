@@ -5,7 +5,7 @@
       <span class="version">v1.0.0尝鲜版</span>
     </div>
 
-    <div :span="12" :offset="6" class="operations-group">
+    <div v-if="isEdit" class="operations-group">
       <operator-group :options="btnList" :iconOnly="true"></operator-group>
     </div>
     <div class="userinfo">
@@ -60,6 +60,11 @@ export default {
       sysUserName: "amingxiansen",
       sysUserAvatar: "",
     };
+  },
+  computed: {
+    isEdit() {
+      return this.$route?.name === "edit";
+    },
   },
   methods: {
     //退出登录

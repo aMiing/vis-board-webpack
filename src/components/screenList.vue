@@ -1,117 +1,51 @@
 <template>
-  <div class="list-content">
-    <!-- <span>test</span> -->
-    <el-tabs tab-position="left" style="height: 100%; background-color: #171b22; padding-top: 5px">
-      <el-tab-pane>
-        <span slot="label" style="display: block; width: 9vw; text-align: left">
-          <i class="el-icon-menu"></i>
-          全部大屏
-        </span>
-        <el-row class="pannelRow">
-          <el-col class="pannal" title="点击新增屏幕">
-            <el-card :body-style="{ padding: '0px' }">
-              <div id="addPanel" style="" @click="createNewPanel">
-                <div>
-                  <div>
-                    <i class="iconfont icon-add" style="font-size: 40px"></i>
-                  </div>
-                  新建可视化
-                </div>
-              </div>
-            </el-card>
-          </el-col>
+  <div class="screen-list">
+    <div class="menu-content">
+      <el-tabs tab-position="left">
+        <el-tab-pane label="全部大屏"></el-tab-pane>
+        <el-tab-pane label="未分组"></el-tab-pane>
+      </el-tabs>
+    </div>
 
-          <el-col ref="pannelBox" class="pannal" v-for="(pannel, index) in panels" :key="pannel.id">
-            <el-card :body-style="{ padding: '0px' }">
-              <!-- 编辑功能的模态框 -->
-              <div>
-                <div
-                  ref="dialog"
-                  id="dialog"
-                  @mouseover="showEdit(index)"
-                  @mouseout="hiddenEdit(index)"
-                  style="opacity: 0"
-                >
-                  <div class="dialog-modal"></div>
-                  <i class="el-icon-delete" @click="deleatePannel(pannel.id)"></i>
-                  <el-button type="primary" class="edit" @click="openWindow(pannel.id)">
-                    编辑
-                  </el-button>
-                </div>
-                <img :src="pannel.img" class="image" height="145" />
-              </div>
-              <div style="padding: 5px 10px 10px 10px">
-                <div class="titlecontain" style="font-size: 16px">
-                  <i class="el-icon-edit" @click="modifyPannelTitle(index)" title="编辑名称"></i>
-                  <span style="line-height: 36px; padding-left: 4px">{{ pannel.title }}</span>
-                </div>
+    <div class="card-list-content">
+      <GtCardList :cardList="panels" :showState="false" :rowMaxNum="6">
+        <template v-slot:operator="{ card }">
+          <div class="model-item-row mt-8">
+            <div class="viewCount">
+              <i class="iconfont icon-yulan"></i>
+              <span>{{ card.viewCount || 0 }}</span>
+            </div>
 
-                <div
-                  class="line"
-                  style="
-                    height: 1px;
-                    width: 100%;
-                    border-bottom: 1px dashed #333;
-                    margin-bottom: 10px;
-                  "
-                ></div>
-                <!-- 操作按钮 -->
-                <el-row type="flex" class="row-bg" justify="space-around">
-                  <el-col :span="7">
-                    <div class="grid-content bg-purple">
-                      <i class="iconfont icon-fuzhi1" title="复制">复制</i>
-                    </div>
-                  </el-col>
-                  <el-col :span="7">
-                    <div class="grid-content bg-purple-light" @click="preview(pannel.id)">
-                      <i class="iconfont icon-view" title="预览">预览</i>
-                    </div>
-                  </el-col>
-                  <el-col :span="8">
-                    <div class="grid-content bg-purple">
-                      <el-switch
-                        v-model="pannel.published"
-                        :width="40"
-                        active-text="发布"
-                        inactive-text=""
-                        disabled
-                        v-if="pannel.haveContent == 0"
-                        title="空界面不可发布哦"
-                      ></el-switch>
-                      <el-switch
-                        active-color="#02710d"
-                        inactive-color="#333"
-                        @change="publishedOr($event, pannel.id, index)"
-                        v-model="pannel.published"
-                        :width="40"
-                        title="发布"
-                      ></el-switch>
-                      <label>发布</label>
-                    </div>
-                  </el-col>
-                </el-row>
-              </div>
-            </el-card>
-          </el-col>
-        </el-row>
-      </el-tab-pane>
-      <el-tab-pane>
-        <span slot="label" style="display: block; width: 9vw; text-align: left">
-          <i class="el-icon-menu"></i>
-          未分组
-        </span>
-      </el-tab-pane>
-    </el-tabs>
-    <createDialog ref="createNewPanelDialog" @submit="addPanel" />
+            <div class="follow-content">
+              <el-link :underline="false" @click="clickFollow(card)">
+                <i class="iconfont icon-shoucang-weidianji"></i>
+              </el-link>
+            </div>
+          </div>
+        </template>
+        <template v-slot:mode_operation="{ card }">
+          <div class="modal_operation__modal" v-if="operationList.length">
+            <operator-group :options="operationList" :data="card"></operator-group>
+          </div>
+        </template>
+        <template v-slot:preview="{ card }">
+          <img :src="card.img" class="preview-img" alt="预览图片" />
+        </template>
+      </GtCardList>
+    </div>
   </div>
 </template>
 
 <script>
-import createDialog from "./dialog/create-dialog";
+import GtCardList from "./gt-card-list/index.vue";
+import operatorGroup from "@/components/operator-group/";
+const defaultImg = require("@/assets/images/bg.png");
+
 export default {
   name: "ScrrenList",
   components: {
-    createDialog,
+    GtCardList,
+    operatorGroup,
   },
   data() {
     return {
@@ -122,50 +56,64 @@ export default {
       panels: [],
       theNewPannel: {
         title: "新屏幕",
-        img: "../../static/img/4.jpg",
+        img: defaultImg,
         published: 0,
       },
+
+      operationList: [
+        {
+          id: 1,
+          name: "编辑",
+          iconClass: "icon-bianji",
+          hidden: row => row.type === "1",
+          click: row => this.goEditPage(row),
+        },
+        {
+          id: 3,
+          name: "预览",
+          iconClass: "icon-yulan",
+          hidden: row => row.type === "1",
+          click: row => this.goEditPage(row),
+        },
+        {
+          id: 2,
+          name: "删除",
+          iconClass: "icon-shanchu",
+          hidden: row => row.type === "1",
+          click: row => this.deleatePannel(row),
+        },
+      ],
     };
   },
 
-  created: function () {
+  mounted() {
     this.getPanelList();
   },
 
   methods: {
+    addPanel(data) {
+      const newPanel = { ...this.theNewPannel, ...data, id: this.getId() };
+      this.panels.unshift(newPanel); //本地更新面板列表
+      this.updateData();
+    },
+
+    getId() {
+      return Math.random().toString(16).slice(2);
+    },
+    // 数据变动之后，更新storage
+    updateData() {
+      const panelListStr = JSON.stringify(this.panels);
+      //   存储或更新localstorage
+      window.sessionStorage.setItem("panelListStr", panelListStr);
+    },
+
     getPanelList() {
       //   获取panelList
-      const list = window.localStorage.getItem("panelListStr") || "[]";
+      const list = window.sessionStorage.getItem("panelListStr") || "[]";
       this.panels = JSON.parse(list);
     },
-    createNewPanel() {
-      this.$refs.createNewPanelDialog.create();
-    },
-    openWindow(id) {
-      this.$router.push({
-        name: "edit",
-        query: {
-          id,
-        },
-      });
-    },
-    preview(id) {
-      this.$router.push({
-        name: "preview",
-        query: {
-          id,
-        },
-      });
-    },
-    showEdit(index) {
-      this.$refs.dialog[index].style.opacity = 1;
-    },
-    hiddenEdit(index) {
-      //console.log(this.$refs.dialog[index]);
-      this.$refs.dialog[index].style.opacity = 0;
-      /*this.style.opacity=1;*/
-    },
-    deleatePannel(id) {
+
+    deleatePannel({ id }) {
       this.$confirm("此操作将删除该面板, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -182,83 +130,17 @@ export default {
         });
       });
     },
-    // 数据变动之后，更新storage
-    updateData() {
-      const panelListStr = JSON.stringify(this.panels);
-      //   存储或更新localstorage
-      window.localStorage.setItem("panelListStr", panelListStr);
+    clickFollow(row) {
+      console.log("row, clickFollow", row);
     },
-    publishedOr(info, id, index) {
-      console.log(info);
-      if (info == true) {
-        this.$confirm("发布之后可以通过链接分享和访问, 是否继续?", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        })
-          .then(() => {
-            this.$message({
-              type: "success",
-              message: "发布成功!",
-            });
-            //ajax获取另一个服务上的数据
-            let url = "http://localhost:8888/publishedOr";
-            this.$http
-              .post(url, { id: id, published: 1 }, { emulateJSON: true })
-              .then((req, res) => {
-                console.log(res.bodyText);
-              })
-              .catch(err => {
-                console.log("未能成功发送publishedOr(1)数据，请联系系统维护人员或稍后重试！");
-                return;
-              });
-          })
-          .catch(() => {
-            this.$message({
-              type: "info",
-              message: "已取消发布操作",
-            });
-            this.panels[index].published = false;
-          });
-      } else {
-        this.$confirm("取消发布之后不能通过链接分享和访问, 是否继续?", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning",
-        })
-          .then(() => {
-            this.$message({
-              type: "success",
-              message: "下架成功!",
-            });
-            //ajax获取另一个服务上的数据
-            let url = "http://localhost:8888/publishedOr";
-            this.$http
-              .post(url, { id: id, published: 0 }, { emulateJSON: true })
-              .then((req, res) => {
-                console.log(res.bodyText);
-              })
-              .catch(err => {
-                console.log("未能成功发送publishedOr(0)数据，请联系系统维护人员或稍后重试！");
-                return;
-              });
-          })
-          .catch(() => {
-            this.$message({
-              type: "info",
-              message: "已取消下架操作",
-            });
-            this.panels[index].published = true;
-          });
-      }
-    },
-    getId() {
-      return Math.random().toString(16).slice(2);
-    },
-    addPanel(data) {
-      const newPanel = { ...this.theNewPannel, ...data, id: this.getId() };
-      this.panels.unshift(newPanel); //本地更新面板列表
-      this.updateData();
+
+    goEditPage({ id }) {
+      this.$router.push({
+        name: "edit",
+        query: {
+          id,
+        },
+      });
     },
     modifyPannelTitle(index) {
       this.$prompt("请输入新标题", "修改屏幕标题", {
@@ -295,12 +177,48 @@ export default {
 };
 </script>
 
-<style scoped>
-#addPanel {
-  padding: 75px 10px;
-  text-align: center;
-  line-height: 36px;
-  font-size: 18px;
+<style scoped lang="scss">
+.screen-list {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  .menu-content {
+    flex: 0 0 120px;
+  }
+  .card-list-content {
+    overflow: auto;
+    .preview-img {
+      width: 100%;
+      height: 100%;
+      object-fit: scale-down;
+    }
+    .model-item-row {
+      padding-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .modal_operation__modal {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: var(--grey-1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      color: var(--grey-11);
+      font-size: var(--font-size-s);
+      &.active {
+        opacity: 0.8;
+        transition: all 0.3s;
+      }
+      &:hover {
+        opacity: 0.8;
+        transition: all 0.3s;
+      }
+    }
+  }
 }
 .edit {
   position: absolute;
@@ -310,13 +228,7 @@ export default {
   width: 60px;
   z-index: 11;
 }
-.el-card {
-  position: absolute;
-  background-color: #171b22;
-  color: #ccc;
-  border: 1px dashed rgba(126, 126, 126, 0.6);
-  box-shadow: 0 0 2px #4bf !important;
-}
+
 #dialog > i {
   position: absolute;
   margin: 5px 215px;
@@ -331,43 +243,5 @@ export default {
   z-index: 9;
   background-color: #000;
   opacity: 0.8;
-}
-.time {
-  font-size: 13px;
-  color: #999;
-}
-.el-switch__label {
-  z-index: 0;
-}
-
-.bottom {
-  margin-top: 13px;
-  line-height: 12px;
-}
-
-.button {
-  padding: 0;
-  float: right;
-}
-
-.image {
-  width: 100%;
-  display: block;
-}
-
-.clearfix:before,
-.clearfix:after {
-  display: table;
-  content: "";
-}
-
-.clearfix:after {
-  clear: both;
-}
-.el-switch__label {
-  display: none;
-}
-.pannelRow {
-  padding-left: 10px;
 }
 </style>

@@ -2,7 +2,7 @@
   <div class="widget">
     <el-collapse v-model="activeNames" accordion>
       <el-collapse-item
-        v-for="(group, index) in widgetConfig"
+        v-for="(group, index) in widgetGroup"
         :key="index"
         :title="group.label + `(${group.widgets.length})`"
         :name="group.name"
@@ -24,16 +24,35 @@
   </div>
 </template>
 <script>
-import { widgetConfig } from "./config/widget";
+import { widgetGroup } from "./config/widget";
+import widgetsConfig from "@/config/widgets/index";
+import { mapActions, mapMutations, mapGetters } from "vuex";
 export default {
   name: "Widget",
   data() {
     return {
       activeNames: "",
-      widgetConfig,
+      widgetGroup,
     };
   },
-  methods: {},
+  computed: {
+    ...mapGetters("panel", ["getElements"]),
+  },
+  methods: {
+    ...mapActions("panel", ["addElements"]),
+    getRandomId() {
+      return Math.random().toString(16).slice(2);
+    },
+    UseIt(widget) {
+      //   从配置项中获取基础配置
+      const _widget = {
+        ...widget,
+        ...widgetsConfig[widget.name],
+        id: this.getRandomId(),
+      };
+      this.addElements(_widget);
+    },
+  },
 };
 </script>
 <style scoped lang="scss">

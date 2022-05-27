@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <!-- 左侧层级区域 -->
+    <!-- 左侧区域 -->
     <div class="left-config__pannel">
       <g-drag-box
         placement="right"
@@ -17,7 +17,7 @@
 
     <!-- 中心舞台 -->
     <div class="screen-content">
-      <mainScreen />
+      <mainScreen v-model="screen" />
       <!-- 缩放控制器 -->
     </div>
     <!-- 右侧设置面板 -->
@@ -31,7 +31,7 @@
         collapse2min
         :drag="true"
       >
-        <configPage :type="currentType" />
+        <configPage :type="currentType" v-model="screen" />
       </g-drag-box>
     </div>
   </div>
@@ -42,6 +42,7 @@ import commonHeader from "./components/header";
 import configPage from "./components/config-page";
 import materialList from "./components/material";
 import mainScreen from "./components/main-screen";
+import { mapActions, mapMutations } from "vuex";
 
 export default {
   components: {
@@ -56,28 +57,32 @@ export default {
       configCollapse: false,
       ScreenBgColor: "rgb(36,43,41)",
       currentType: "screen",
+      panels: [],
     };
   },
   // watch
-  created: function () {
-    // 获取tabItems、pageComponents数据
-    // this.pageComponents = [
-    //   {
-    //     label: "文本",
-    //     name: "commonText",
-    //     component: "common-text",
-    //     color: "#fff",
-    //     fontSize: 14,
-    //     fontWeight: 400,
-    //     fontFamily: "",
-    //     text: "我是通用文本组件",
-    //     textAlign: "center",
-    //     id: "a2e84f8ae81d8",
-    //   },
-    // ];
+  created() {
+    this.getPanelList();
+    console.log("this.$route", this.$route);
+
+    this.setPanelId(this.id);
   },
-  mounted() {},
-  methods: {},
+  computed: {
+    id() {
+      return this.$route?.query?.id;
+    },
+    screen() {
+      return this.panels.find(e => e.id === this.id);
+    },
+  },
+  methods: {
+    ...mapMutations("panel", ["setPanelId"]),
+    getPanelList() {
+      //   获取panelList
+      const list = window.sessionStorage.getItem("panelListStr") || "[]";
+      this.panels = JSON.parse(list);
+    },
+  },
 };
 </script>
 <style scoped lang="scss">

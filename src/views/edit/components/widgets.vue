@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import widgetsConfig from "@/configs/widgets/index";
+import widgetsConfig from "@/config/widgets/index";
 import { mapActions, mapGetters } from "vuex";
 
 export default {

@@ -1,45 +1,60 @@
 <template>
-  <section>
-    <el-row
-      style="
-        line-height: 28px;
-        font-size: 15px;
-        font-weight: 600;
-        border-bottom: 1px solid rgba(66, 66, 66, 0.9);
-        padding-bottom: 5px;
-        background-color: #171b22;
-      "
-    >
-      <el-col :span="3" style="padding-left: 20px">
-        <i class="el-icon-menu"></i>
-        <span>我的分组</span>
-      </el-col>
-      <el-col :span="21" style="padding-left: 10px; color: #6bf">
+  <div class="panel-list">
+    <div class="header">
+      <div class="header-title">
         <span>大屏管理</span>
-      </el-col>
-    </el-row>
-    <screenList />
-  </section>
+      </div>
+      <el-button class="panel__create" @click="createNewPanel">
+        <i class="iconfont icon-tianjia1"></i>
+        <span class="add-label">新建可视化</span>
+        <createDialog ref="createNewPanelDialog" @submit="addPanel" />
+      </el-button>
+    </div>
+    <screenList ref="screenList" />
+  </div>
 </template>
 
 <script>
 import screenList from "@/components/screenList";
+import createDialog from "@/components/dialog/create-dialog";
 export default {
   name: "PanelList",
   components: {
     screenList,
+    createDialog,
   },
   data() {
     return {};
   },
+  methods: {
+    createNewPanel() {
+      this.$refs.createNewPanelDialog.create();
+    },
+    addPanel(data) {
+      this.$refs.screenList.addPanel(data);
+    },
+  },
 };
 </script>
 
-<style scoped>
-i {
-  cursor: pointer;
-}
-i:hover {
-  color: #6bf;
+<style scoped lang="scss">
+.panel-list {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  .header {
+    // height: 30px;
+    line-height: 30px;
+    padding: 0 4px 8px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .panel__create {
+    text-align: right;
+  }
 }
 </style>

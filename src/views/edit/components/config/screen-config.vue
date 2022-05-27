@@ -1,6 +1,6 @@
 <template>
   <div class="setting-content">
-    <div class="screen-title">屏幕名称：{{ screenConfig.title || "--" }}</div>
+    <div class="screen-title">屏幕名称：{{ value.title || "--" }}</div>
     <div class="main">
       <el-form ref="form" :model="screenConfig" label-width="80px">
         <el-form-item label="屏幕大小">
@@ -72,19 +72,26 @@
           ></el-input-number>
         </el-form-item>
       </el-form>
+    </div>
 
-      <div class="operation-content">
-        <el-button type="primary" plain>重置</el-button>
-        <el-button type="primary" plain>恢复默认背景</el-button>
-      </div>
+    <div class="operation-content">
+      <el-button type="primary" plain>重置</el-button>
+      <el-button type="primary" plain>恢复默认背景</el-button>
     </div>
   </div>
 </template>
 
 <script>
-import screenConfig from "@/configs/screen";
+import screenConfig from "@/config/screen";
 const screenShot = require("@/assets/images/bg.png");
 export default {
+  name: "ScreenConfig",
+  props: {
+    value: {
+      type: Object,
+      default: () => ({}),
+    },
+  },
   data() {
     return {
       screenConfig,
@@ -136,17 +143,17 @@ export default {
   min-width: 270px;
 }
 .screen-title {
-  margin: 0;
-  height: 40px;
-  line-height: 40px;
-  text-align: center;
-  border-bottom: 1px solid #ccc;
+  height: 30px;
+  line-height: 30px;
+  border-bottom: 1px solid var(--grey-1);
+  padding: 0 12px;
+  font-weight: 500;
 }
 .main {
-  padding: 12px 12px 24px;
-  font-size: 12px;
-  overflow-y: auto;
-  height: calc(100% - 40px);
+  position: relative;
+  padding: 12px;
+  overflow: auto;
+  height: calc(100% - 30px - 54px);
 
   .size {
     display: flex;
@@ -154,9 +161,14 @@ export default {
     height: 70px;
     justify-content: space-between;
   }
-  .operation-content {
-    text-align: center;
-  }
+}
+.operation-content {
+  text-align: center;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 12px 0;
+  border-top: 1px solid var(--grey-1);
 }
 .screenshot {
   position: relative;

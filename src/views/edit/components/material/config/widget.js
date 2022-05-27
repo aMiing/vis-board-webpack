@@ -1,4 +1,4 @@
-export const widgetConfig = [
+export const widgetGroup = [
   {
     label: "基础组件",
     name: "common",

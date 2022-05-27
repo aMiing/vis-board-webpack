@@ -41,7 +41,7 @@ import seriesDashbord from "@/components/widgets/seriesDashbord";
 import borderWidget from "@/components/widgets/border";
 import iconFont from "@/components/widgets/iconFont";
 
-import screen from "@/configs/screen.js";
+import screen from "@/config/screen.js";
 import { mapGetters } from "vuex";
 import { debounce } from "lodash";
 export default {
@@ -85,7 +85,9 @@ export default {
         width: width + whUnit,
         height: height + whUnit,
         fontSize: fontSize + fontUnit,
-        transform: `scale(${this.scale}) translate(-${((1 / this.scale - 1) / 2) * 100}%, -${((1 / this.scale - 1) / 2) * 100}%)`,
+        transform: `scale(${this.scale}) translate(-${((1 / this.scale - 1) / 2) * 100}%, -${
+          ((1 / this.scale - 1) / 2) * 100
+        }%)`,
         transition: "all 0.3s",
       };
     },
@@ -120,7 +122,8 @@ export default {
 </script>
 <style lang="scss" scoped>
 .screen {
-  background: linear-gradient(-90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px) 0% 0% / 20px 20px,
+  background: linear-gradient(-90deg, rgba(255, 255, 255, 0.1) 1px, transparent 1px) 0% 0% / 20px
+      20px,
     linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px) 0% 0% / 20px 20px;
 }
 </style>
