@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <!-- 左侧区域 -->
-    <div class="left-config__pannel">
+    <div class="left-config__panel">
       <g-drag-box
         placement="right"
         span="300"
@@ -111,7 +111,7 @@ export default {
     }
   }
 
-  .left-config__pannel {
+  .left-config__panel {
     background: var(--grey-3, #2e3857);
   }
   .right-config__panel {

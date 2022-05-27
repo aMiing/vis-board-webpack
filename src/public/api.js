@@ -1,7 +1,6 @@
-
-let host = '/api';
+let host = "/api";
 
 export default {
-    getPannelList: host + '/getPannelList',
-    getPannelInfo: host + '/getPannelInfo',
-}
+  getPanelList: host + "/getPanelList",
+  getPanelInfo: host + "/getPanelInfo",
+};

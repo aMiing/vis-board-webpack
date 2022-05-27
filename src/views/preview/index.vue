@@ -1,6 +1,6 @@
 <template>
   <div
-    class="screenPannel"
+    class="screenPanel"
     style="width: 100%; height: 100%"
     :style="{ backgroundColor: screenSet.bgcolor }"
     v-loading="loadTime"
@@ -11,7 +11,14 @@
     <div id="pageBox"></div>
     <!-- 增加一个大框，阻止鼠标的事件触发 -->
     <div v-for="item in pageComponents" :key="item.id">
-      <template :is="item.name" :item="item" @loadSetting="loadSetting" @changeSize="changeSize" @changePosition="changePosition" @deleate="deleate"></template>
+      <template
+        :is="item.name"
+        :item="item"
+        @loadSetting="loadSetting"
+        @changeSize="changeSize"
+        @changePosition="changePosition"
+        @deleate="deleate"
+      ></template>
     </div>
   </div>
 </template>

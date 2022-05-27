@@ -54,7 +54,7 @@ export default {
       dialogEditVisible: false,
       formLabelWidth: "120px",
       panels: [],
-      theNewPannel: {
+      theNewPanel: {
         title: "新屏幕",
         img: defaultImg,
         published: 0,
@@ -80,7 +80,7 @@ export default {
           name: "删除",
           iconClass: "icon-shanchu",
           hidden: row => row.type === "1",
-          click: row => this.deleatePannel(row),
+          click: row => this.deleatePanel(row),
         },
       ],
     };
@@ -92,7 +92,7 @@ export default {
 
   methods: {
     addPanel(data) {
-      const newPanel = { ...this.theNewPannel, ...data, id: this.getId() };
+      const newPanel = { ...this.theNewPanel, ...data, id: this.getId() };
       this.panels.unshift(newPanel); //本地更新面板列表
       this.updateData();
     },
@@ -113,7 +113,7 @@ export default {
       this.panels = JSON.parse(list);
     },
 
-    deleatePannel({ id }) {
+    deleatePanel({ id }) {
       this.$confirm("此操作将删除该面板, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -142,7 +142,7 @@ export default {
         },
       });
     },
-    modifyPannelTitle(index) {
+    modifyPanelTitle(index) {
       this.$prompt("请输入新标题", "修改屏幕标题", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",

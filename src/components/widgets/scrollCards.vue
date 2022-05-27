@@ -15,24 +15,58 @@
       top: item.widgetTop + '%',
     }"
   >
-    <div class="btn" style="position: absolute; left: 0; top: 0; z-index: 99; background: #6bf; font-size: 1vw">
-      <div class="copy btn" @click="copyIt" title="复制" style="cursor: pointer; float: left; padding: 2px">
+    <div
+      class="btn"
+      style="position: absolute; left: 0; top: 0; z-index: 99; background: #6bf; font-size: 1vw"
+    >
+      <div
+        class="copy btn"
+        @click="copyIt"
+        title="复制"
+        style="cursor: pointer; float: left; padding: 2px"
+      >
         <a href="#"><i class="iconfont icon-fuzhi1"></i></a>
       </div>
-      <div class="deleate btn" @click="deleteIt" title="删除" style="cursor: pointer; float: left; padding: 2px">
+      <div
+        class="deleate btn"
+        @click="deleteIt"
+        title="删除"
+        style="cursor: pointer; float: left; padding: 2px"
+      >
         <a><i class="iconfont icon-icon-delete"></i></a>
       </div>
     </div>
 
-    <div class="reSize btn" @mousedown="resizeIt" title="改变大小" style="position: absolute; right: 0; bottom: 0; z-index: 99">
-      <el-button size="small" style="cursor: se-resize; background-color: #6bf; color: #000; font-size: 1vw; background: #6bf; border: 0; border-radius: 0">
+    <div
+      class="reSize btn"
+      @mousedown="resizeIt"
+      title="改变大小"
+      style="position: absolute; right: 0; bottom: 0; z-index: 99"
+    >
+      <el-button
+        size="small"
+        style="
+          cursor: se-resize;
+          background-color: #6bf;
+          color: #000;
+          font-size: 1vw;
+          background: #6bf;
+          border: 0;
+          border-radius: 0;
+        "
+      >
         <i class="iconfont icon-resize" style="cursor: se-resize"></i>
       </el-button>
     </div>
     <div ref="titleText" style="position: absolute; width: 100%; display: table; height: 100%">
       <div
         style="display: table-cell; vertical-align: middle"
-        :style="{ fontWeight: item.fontWeight * 10, fontFamily: item.fontFamily, fontSize: item.fontSize / 20 + 'vw', color: item.fontColor }"
+        :style="{
+          fontWeight: item.fontWeight * 10,
+          fontFamily: item.fontFamily,
+          fontSize: item.fontSize / 20 + 'vw',
+          color: item.fontColor,
+        }"
       >
         <el-carousel :interval="4000" :type="item.Type" :height="scrollHeight">
           <el-carousel-item>
@@ -79,13 +113,19 @@ export default {
   },
   mounted: function () {
     // this.dataJson = this.dataJson.split(',');
-    this.scrollHeight = this.item.widgetHeight * (document.getElementsByClassName("screenPannel")[0].clientHeight / 110) + "px";
-    console.log(document.getElementsByClassName("screenPannel")[0].clientHeight);
+    this.scrollHeight =
+      this.item.widgetHeight *
+        (document.getElementsByClassName("screenPanel")[0].clientHeight / 110) +
+      "px";
+    console.log(document.getElementsByClassName("screenPanel")[0].clientHeight);
     console.log(this.scrollHeight);
     console.log(this.item.widgetHeight);
   },
   beforeUpdate: function () {
-    this.scrollHeight = this.item.widgetHeight * (document.getElementsByClassName("screenPannel")[0].clientHeight / 110) + "px";
+    this.scrollHeight =
+      this.item.widgetHeight *
+        (document.getElementsByClassName("screenPanel")[0].clientHeight / 110) +
+      "px";
   },
   methods: {
     MoveIt: function (e) {

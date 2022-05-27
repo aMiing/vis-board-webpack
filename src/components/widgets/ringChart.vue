@@ -15,26 +15,66 @@
       top: item.widgetTop + '%',
     }"
   >
-    <div class="btn" style="position: absolute; left: 0; top: 0; z-index: 99; background: #6bf; font-size: 1vw">
-      <div class="copy btn" @click="copyIt" title="复制" style="cursor: pointer; float: left; padding: 2px">
+    <div
+      class="btn"
+      style="position: absolute; left: 0; top: 0; z-index: 99; background: #6bf; font-size: 1vw"
+    >
+      <div
+        class="copy btn"
+        @click="copyIt"
+        title="复制"
+        style="cursor: pointer; float: left; padding: 2px"
+      >
         <a href="#"><i class="iconfont icon-fuzhi1"></i></a>
       </div>
-      <div class="deleate btn" @click="deleteIt" title="删除" style="cursor: pointer; float: left; padding: 2px">
+      <div
+        class="deleate btn"
+        @click="deleteIt"
+        title="删除"
+        style="cursor: pointer; float: left; padding: 2px"
+      >
         <a><i class="iconfont icon-icon-delete"></i></a>
       </div>
     </div>
 
-    <div class="reSize btn" @mousedown="resizeIt" title="改变大小" style="position: absolute; right: 0; bottom: 0; z-index: 99">
-      <el-button size="small" style="cursor: se-resize; background-color: #6bf; color: #000; font-size: 1vw; background: #6bf; border: 0; border-radius: 0">
+    <div
+      class="reSize btn"
+      @mousedown="resizeIt"
+      title="改变大小"
+      style="position: absolute; right: 0; bottom: 0; z-index: 99"
+    >
+      <el-button
+        size="small"
+        style="
+          cursor: se-resize;
+          background-color: #6bf;
+          color: #000;
+          font-size: 1vw;
+          background: #6bf;
+          border: 0;
+          border-radius: 0;
+        "
+      >
         <i class="iconfont icon-resize" style="cursor: se-resize"></i>
       </el-button>
     </div>
     <div
       ref="barChart"
       style="position: absolute; width: 100%; display: table; text-align: center; height: 100%"
-      :style="{ fontWeight: item.fontWeight * 10, fontFamily: item.fontFamily, fontSize: item.fontSize / 20 + 'vw', textAlign: item.textAlign }"
+      :style="{
+        fontWeight: item.fontWeight * 10,
+        fontFamily: item.fontFamily,
+        fontSize: item.fontSize / 20 + 'vw',
+        textAlign: item.textAlign,
+      }"
     >
-      <ve-ring :data="chartData" :width="chartWidth" :height="chartHeight" :extend="chartExtend" :settings="chartSettings"></ve-ring>
+      <ve-ring
+        :data="chartData"
+        :width="chartWidth"
+        :height="chartHeight"
+        :extend="chartExtend"
+        :settings="chartSettings"
+      ></ve-ring>
     </div>
   </div>
 </template>
@@ -83,28 +123,58 @@ export default {
   created: function () {},
   mounted: function () {
     this.chartSettings.roseType = this.item.roseType;
-    this.chartWidth = this.item.widgetWidth * (document.getElementsByClassName("screenPannel")[0].clientWidth / 100) + "px";
-    this.chartHeight = this.item.widgetHeight * (document.getElementsByClassName("screenPannel")[0].clientHeight / 100) + "px";
+    this.chartWidth =
+      this.item.widgetWidth *
+        (document.getElementsByClassName("screenPanel")[0].clientWidth / 100) +
+      "px";
+    this.chartHeight =
+      this.item.widgetHeight *
+        (document.getElementsByClassName("screenPanel")[0].clientHeight / 100) +
+      "px";
 
-    this.chartSettings.radius[0] = this.item.widgetHeight * (document.getElementsByClassName("screenPannel")[0].clientHeight / 33 / this.item.thin);
-    this.chartSettings.radius[1] = this.item.widgetHeight * (document.getElementsByClassName("screenPannel")[0].clientHeight / 250);
+    this.chartSettings.radius[0] =
+      this.item.widgetHeight *
+      (document.getElementsByClassName("screenPanel")[0].clientHeight / 33 / this.item.thin);
+    this.chartSettings.radius[1] =
+      this.item.widgetHeight *
+      (document.getElementsByClassName("screenPanel")[0].clientHeight / 250);
     this.chartSettings.offsetY = this.chartSettings.radius[1] * 1.3;
     let self = this;
     window.onresize = function () {
-      self.chartWidth = self.item.widgetWidth * (document.getElementsByClassName("screenPannel")[0].clientWidth / 100) + "px";
-      self.chartHeight = self.item.widgetHeight * (document.getElementsByClassName("screenPannel")[0].clientHeight / 100) + "px";
+      self.chartWidth =
+        self.item.widgetWidth *
+          (document.getElementsByClassName("screenPanel")[0].clientWidth / 100) +
+        "px";
+      self.chartHeight =
+        self.item.widgetHeight *
+          (document.getElementsByClassName("screenPanel")[0].clientHeight / 100) +
+        "px";
 
-      self.chartSettings.radius[0] = self.item.widgetHeight * (document.getElementsByClassName("screenPannel")[0].clientHeight / 33 / self.item.thin);
-      self.chartSettings.radius[1] = self.item.widgetHeight * (document.getElementsByClassName("screenPannel")[0].clientHeight / 250);
+      self.chartSettings.radius[0] =
+        self.item.widgetHeight *
+        (document.getElementsByClassName("screenPanel")[0].clientHeight / 33 / self.item.thin);
+      self.chartSettings.radius[1] =
+        self.item.widgetHeight *
+        (document.getElementsByClassName("screenPanel")[0].clientHeight / 250);
       self.chartSettings.offsetY = self.chartSettings.radius[1] * 1.3;
     };
   },
   beforeUpdate: function () {
-    this.chartWidth = this.item.widgetWidth * (document.getElementsByClassName("screenPannel")[0].clientWidth / 100) + "px";
-    this.chartHeight = this.item.widgetHeight * (document.getElementsByClassName("screenPannel")[0].clientHeight / 100) + "px";
+    this.chartWidth =
+      this.item.widgetWidth *
+        (document.getElementsByClassName("screenPanel")[0].clientWidth / 100) +
+      "px";
+    this.chartHeight =
+      this.item.widgetHeight *
+        (document.getElementsByClassName("screenPanel")[0].clientHeight / 100) +
+      "px";
 
-    this.chartSettings.radius[0] = this.item.widgetHeight * (document.getElementsByClassName("screenPannel")[0].clientHeight / 33 / this.item.thin);
-    this.chartSettings.radius[1] = this.item.widgetHeight * (document.getElementsByClassName("screenPannel")[0].clientHeight / 250);
+    this.chartSettings.radius[0] =
+      this.item.widgetHeight *
+      (document.getElementsByClassName("screenPanel")[0].clientHeight / 33 / this.item.thin);
+    this.chartSettings.radius[1] =
+      this.item.widgetHeight *
+      (document.getElementsByClassName("screenPanel")[0].clientHeight / 250);
     this.chartSettings.offsetY = this.chartSettings.radius[1] * 1.3;
   },
   computed: {
