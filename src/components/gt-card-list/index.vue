@@ -25,7 +25,7 @@
               <span class="card-item-row-normal ofellipsis">创建者:{{ card.creator }}</span>
             </span>
           </ellipsis-tooltip>
-          <div class="card-item-row-normal">{{ card.updateTime | filterTime }}</div>
+          <div class="card-item-row-normal">{{ card.createTime | filterTime }}</div>
         </div>
         <slot name="operator" :card="card"></slot>
       </div>
@@ -271,10 +271,6 @@ export default {
     // .card-item-row-status .dot {
     //   background: var(--green-6);
     // }
-  }
-  .iconfont_model {
-    font-size: 20px;
-    cursor: pointer;
   }
   .ofellipsis {
     overflow: hidden;

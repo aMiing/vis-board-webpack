@@ -2,13 +2,20 @@ export const menuList = [
   {
     path: "list",
     name: "home.list",
-    iconCls: "fa fa-bar-chart",
-    component: () => import(/* webpackChunkName: "manage" */ "@/views/panelList.vue"),
+    component: () => import(/* webpackChunkName: "manage" */ "@/views/list/panel.vue"),
+    meta: {
+      label: "看板管理",
+      iconCls: "iconfont icon-kanbanguanli",
+    },
   },
   {
     path: "examples",
     name: "home.examples",
     component: () => import(/* webpackChunkName: "examples" */ "@/views/charts/echarts.vue"),
-    iconCls: "fa fa-book",
+
+    meta: {
+      label: "案例展示",
+      iconCls: "iconfont icon-examples",
+    },
   },
 ];

@@ -1,100 +1,84 @@
 <template>
-  <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-position="left" label-width="0px" class="demo-ruleForm login-container">
-    <h3 class="title"><strong ><i>配置化云看板</i></strong> <span style="font-size: 1.5em;">系统登录</span></h3>
-    <el-form-item prop="account">
-      <el-input type="text" v-model="ruleForm2.account" auto-complete="off" placeholder="账号"></el-input>
+  <el-form :model="form" :rules="rules" label-suffix=":" ref="form" class="login-container">
+    <h2 class="title">配置化云看板系统登录</h2>
+    <el-form-item prop="usercode" label="账号">
+      <el-input
+        type="text"
+        v-model="form.usercode"
+        auto-complete="off"
+        placeholder="请输入账号"
+      ></el-input>
     </el-form-item>
-    <el-form-item prop="checkPass">
-      <el-input type="password" v-model="ruleForm2.checkPass" auto-complete="off" placeholder="密码"></el-input>
+    <el-form-item prop="password" label="密码">
+      <el-input type="password" v-model="form.password" placeholder="请输入密码"></el-input>
     </el-form-item>
-    <el-checkbox v-model="checked" checked class="remember">记住密码</el-checkbox>
-    <el-form-item style="width:100%;">
-      <el-button type="primary" style="width:100%;" @click.native.prevent="handleSubmit2" :loading="logining">登录</el-button>
-      <!--<el-button @click.native.prevent="handleReset2">重置</el-button>-->
+    <el-form-item>
+      <el-checkbox v-model="checked" checked class="remember">记住密码</el-checkbox>
+    </el-form-item>
+
+    <el-form-item>
+      <div class="btn-group">
+        <el-button @click.native.prevent="handleReset">重置</el-button>
+        <el-button type="primary" @click.native.prevent="handleSubmit" :loading="logining">
+          登录
+        </el-button>
+      </div>
     </el-form-item>
   </el-form>
 </template>
 
 <script>
-  import { requestLogin } from '../api/api';
-  //import NProgress from 'nprogress'
-  export default {
-    data() {
-      return {
-        logining: false,
-        ruleForm2: {
-          account: 'admin',
-          checkPass: '123456'
-        },
-        rules2: {
-          account: [
-            { required: true, message: '请输入账号', trigger: 'blur' },
-            //{ validator: validaePass }
-          ],
-          checkPass: [
-            { required: true, message: '请输入密码', trigger: 'blur' },
-            //{ validator: validaePass2 }
-          ]
-        },
-        checked: true
-      };
-    },
-    methods: {
-      handleReset2() {
-        this.$refs.ruleForm2.resetFields();
+export default {
+  name: "Login",
+  data() {
+    return {
+      logining: false,
+      form: {
+        usercode: "admin",
+        password: "123456",
       },
-      handleSubmit2(ev) {
-        var _this = this;
-        this.$refs.ruleForm2.validate((valid) => {
-          if (valid) {//输入是否合法
-            this.logining = true;
-            //NProgress.start();
-            var loginParams = { username: this.ruleForm2.account, password: this.ruleForm2.checkPass };//传参
-            requestLogin(loginParams).then(data => {//调用axios请求用户名密码
-              this.logining = false;
-              //NProgress.done();
-              let { msg, code, user } = data;//返回的结果赋值
-              if (code !== 200) {//如果响应码不是200，则执行下面的操作
-                this.$message({
-                  message: msg,
-                  type: 'error'
-                });
-              } else {//响应成功
-                sessionStorage.setItem('user', JSON.stringify(user));
-                this.$router.push({ path: '/' });
-              }
-            });
-          } else {//输入不合法
-            console.log('error submit!!');
-            return false;
-          }
-        });
-      }
-    }
-  }
-
+      rules: {
+        usercode: [{ required: true, message: "请输入账号", trigger: "blur" }],
+        password: [{ required: true, message: "请输入密码", trigger: "blur" }],
+      },
+      checked: true,
+    };
+  },
+  methods: {
+    handleReset() {
+      this.$refs.form.resetFields();
+    },
+    handleSubmit() {
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          this.logining = true;
+          //响应成功
+          // sessionStorage.setItem("user", JSON.stringify(user));
+          this.$router.push({ path: "/" });
+          this.logining = false;
+        }
+      });
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-  .login-container {
-    /*box-shadow: 0 0px 8px 0 rgba(0, 0, 0, 0.06), 0 1px 0px 0 rgba(0, 0, 0, 0.02);*/
-    -webkit-border-radius: 5px;
-    border-radius: 5px;
-    -moz-border-radius: 5px;
-    background-clip: padding-box;
-    margin: 180px auto;
-    width: 350px;
-    padding: 35px 35px 15px 35px;
-    background: #fff;
-    border: 1px solid #eaeaea;
-    box-shadow: 0 0 25px #cac6c6;
-    .title {
-      margin: 0px auto 40px auto;
-      text-align: center;
-      color: #505458;
-    }
-    .remember {
-      margin: 0px 0px 35px 0px;
-    }
+.login-container {
+  width: 30%;
+  min-width: 350px;
+  margin: 180px auto;
+  border-radius: 5px;
+  padding: 24px 36px;
+  border: 1px solid var(--grey-10);
+  box-shadow: 0 0 25px var(--grey-10);
+  .title {
+    text-align: center;
+    padding: 12px 0 24px;
   }
+  .btn-group {
+    display: flex;
+    justify-content: center;
+  }
+}
 </style>

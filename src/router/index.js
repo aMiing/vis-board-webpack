@@ -40,14 +40,12 @@ const routeList = [
   {
     path: "/login",
     component: Login,
-    name: "登录",
-    hidden: true,
+    name: "login",
   },
   {
     path: "/404",
     component: NotFound,
     name: "404",
-    hidden: true,
   },
 ];
 

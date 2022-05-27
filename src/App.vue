@@ -24,13 +24,14 @@ body {
     -ms-user-select: none;
     user-select: none;
   }
-}
 
-#app {
-  position: absolute;
-  top: 0px;
-  bottom: 0px;
-  left: 0;
-  right: 0;
+  #app {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0;
+    right: 0;
+    background: var(--grey-1);
+  }
 }
 </style>

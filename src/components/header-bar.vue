@@ -10,7 +10,7 @@
     </div>
     <div class="userinfo">
       <el-dropdown trigger="hover">
-        <span class="el-dropdown-link userinfo-inner">欢迎你 {{ sysUserName }}</span>
+        <span class="el-dropdown-link userinfo-inner">欢迎你 {{ getUserInfo.userName }}</span>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>个人信息</el-dropdown-item>
           <el-dropdown-item>修改密码</el-dropdown-item>
@@ -22,6 +22,7 @@
 </template>
 <script>
 import operatorGroup from "@/components/operator-group/index.vue";
+import { mapGetters } from "vuex";
 const btnList = [
   {
     name: "保存",
@@ -62,6 +63,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters("user", ["getUserInfo"]),
     isEdit() {
       return this.$route?.name === "edit";
     },

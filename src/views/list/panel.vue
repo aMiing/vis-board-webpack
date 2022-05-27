@@ -7,7 +7,7 @@
       <el-button class="panel__create" @click="createNewPanel">
         <i class="iconfont icon-tianjia1"></i>
         <span class="add-label">新建可视化</span>
-        <createDialog ref="createNewPanelDialog" @submit="addPanel" />
+        <createDialog ref="createDialog" @submit="addPanel" />
       </el-button>
     </div>
     <screenList ref="screenList" />
@@ -28,7 +28,7 @@ export default {
   },
   methods: {
     createNewPanel() {
-      this.$refs.createNewPanelDialog.create();
+      this.$refs.createDialog.show();
     },
     addPanel(data) {
       this.$refs.screenList.addPanel(data);

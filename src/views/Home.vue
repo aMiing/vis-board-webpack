@@ -8,23 +8,21 @@
       </el-carousel>
 
       <!-- 导航栏 -->
-      <aside class="menu-expanded">
+      <div class="menu-expanded">
         <!--导航菜单-->
         <el-menu
           :default-active="$route.path"
           mode="horizontal"
           class="el-menu-vertical-demo"
-          @select="handleselect"
           unique-opened
           router
         >
-          <el-menu-item v-for="(item, index) in menuList" :key="item.name" :index="item.path">
-            <i :class="item.iconCls"></i>
-            {{ item.name }}
+          <el-menu-item v-for="item in menuList" :key="item.name" :index="item.path">
+            <i :class="item.meta.iconCls"></i>
+            {{ item.meta.label }}
           </el-menu-item>
         </el-menu>
-        <!-- 导航菜单-折叠后 -->
-      </aside>
+      </div>
     </div>
     <!-- 主区域呈现 -->
     <div class="content-container">
@@ -47,40 +45,12 @@ export default {
       ],
     };
   },
-  methods: {
-    onSubmit() {
-      console.log("submit!");
-    },
-    handleopen() {
-      //console.log('handleopen');
-    },
-    handleclose() {
-      //console.log('handleclose');
-    },
-    handleselect: function (a, b) {},
-
-    showMenu(i, status) {
-      // this.$refs.menuCollapsed.getElementsByClassName('submenu-hook-'+i)[0].style.display=status?'block':'none';
-    },
-  },
-  mounted() {
-    var user = sessionStorage.getItem("user");
-    if (user) {
-      user = JSON.parse(user);
-      this.sysUserName = user.name || "";
-      this.sysUserAvatar = user.avatar || "";
-    }
-  },
+  mounted() {},
+  methods: {},
 };
 </script>
 <style scoped lang="scss">
 .container {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: var(--grey-1);
   display: flex;
   flex-direction: column;
   .banner {
@@ -91,17 +61,9 @@ export default {
 
   .menu-expanded {
     position: absolute;
-    top: 20%;
+    top: 25%;
     z-index: 99;
-    margin-left: 2%;
-    .el-menu {
-      font-size: 4vw;
-      background-color: none;
-      li {
-        /* width:160px; */
-        font-weight: 600;
-      }
-    }
+    margin-left: 16px;
   }
 
   .content-container {

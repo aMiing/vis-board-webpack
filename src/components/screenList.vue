@@ -13,12 +13,15 @@
           <div class="model-item-row mt-8">
             <div class="viewCount">
               <i class="iconfont icon-yulan"></i>
-              <span>{{ card.viewCount || 0 }}</span>
+              <span class="count">{{ card.viewCount || 0 }}</span>
             </div>
 
             <div class="follow-content">
               <el-link :underline="false" @click="clickFollow(card)">
-                <i class="iconfont icon-shoucang-weidianji"></i>
+                <i
+                  class="iconfont"
+                  :class="card.followed ? 'icon-shoucang' : 'icon-shoucang-weidianji'"
+                ></i>
               </el-link>
             </div>
           </div>
@@ -39,6 +42,7 @@
 <script>
 import GtCardList from "./gt-card-list/index.vue";
 import operatorGroup from "@/components/operator-group/";
+import { mapGetters } from "vuex";
 const defaultImg = require("@/assets/images/bg.png");
 
 export default {
@@ -66,14 +70,14 @@ export default {
           name: "编辑",
           iconClass: "icon-bianji",
           hidden: row => row.type === "1",
-          click: row => this.goEditPage(row),
+          click: row => this.goNextPage("edit", row),
         },
         {
           id: 3,
           name: "预览",
           iconClass: "icon-yulan",
           hidden: row => row.type === "1",
-          click: row => this.goEditPage(row),
+          click: row => this.goNextPage("preview", row),
         },
         {
           id: 2,
@@ -85,6 +89,9 @@ export default {
       ],
     };
   },
+  computed: {
+    ...mapGetters("user", ["getUserInfo"]),
+  },
 
   mounted() {
     this.getPanelList();
@@ -92,7 +99,16 @@ export default {
 
   methods: {
     addPanel(data) {
-      const newPanel = { ...this.theNewPanel, ...data, id: this.getId() };
+      const newPanel = {
+        ...this.theNewPanel,
+        ...data,
+        id: this.getId(),
+        createTime: new Date().getTime(),
+        creator: this.getUserInfo?.userName,
+        viewCount: 0,
+        followed: 0,
+      };
+      console.log("this.getUserInfo", this.getUserInfo);
       this.panels.unshift(newPanel); //本地更新面板列表
       this.updateData();
     },
@@ -123,7 +139,6 @@ export default {
         this.panels.splice(index, 1);
         //    更新数据
         this.updateData();
-
         this.$message({
           type: "success",
           message: "删除成功!",
@@ -131,14 +146,20 @@ export default {
       });
     },
     clickFollow(row) {
-      console.log("row, clickFollow", row);
+      if (row.followed) {
+        row.followed = 0;
+        this.$message.info("已取消收藏");
+      } else {
+        row.followed = 1;
+        this.$message.success("收藏成功！");
+      }
     },
 
-    goEditPage({ id }) {
+    goNextPage(name, row) {
       this.$router.push({
-        name: "edit",
+        name,
         query: {
-          id,
+          id: row.id,
         },
       });
     },
@@ -185,17 +206,39 @@ export default {
   .menu-content {
     flex: 0 0 120px;
   }
+  .follow-content {
+    .icon-shoucang {
+      color: var(--yellow-6);
+    }
+  }
   .card-list-content {
+    flex: 1;
     overflow: auto;
+
+    .iconfont {
+      font-size: 20px;
+      cursor: pointer;
+    }
     .preview-img {
       width: 100%;
       height: 100%;
       object-fit: scale-down;
     }
     .model-item-row {
-      padding-bottom: 8px;
+      padding: 4px 0;
       display: flex;
       justify-content: space-between;
+      height: 28px;
+      line-height: 20px;
+      .viewCount {
+        color: var(--grey-11);
+        .iconfont {
+          vertical-align: bottom;
+        }
+        .count {
+          padding: 0 4px;
+        }
+      }
     }
 
     .modal_operation__modal {
