@@ -43,6 +43,7 @@
 import GtCardList from "./gt-card-list/index.vue";
 import operatorGroup from "@/components/operator-group/";
 import { mapGetters } from "vuex";
+import screenConfig from "@/config/screen.js";
 const defaultImg = require("@/assets/images/bg.png");
 
 export default {
@@ -100,6 +101,7 @@ export default {
   methods: {
     addPanel(data) {
       const newPanel = {
+        ...screenConfig,
         ...this.theNewPanel,
         ...data,
         id: this.getId(),
@@ -108,7 +110,8 @@ export default {
         viewCount: 0,
         followed: 0,
       };
-      console.log("this.getUserInfo", this.getUserInfo);
+
+      console.log("newPanel", newPanel);
       this.panels.unshift(newPanel); //本地更新面板列表
       this.updateData();
     },

@@ -12,10 +12,13 @@
           <div
             class="chart"
             v-for="widget in group.widgets"
+            draggable="true"
             :key="widget.name"
             @click="UseIt(widget)"
+            @dragstart="e => dragstart(e, widget)"
+            @dragenter="dragenter"
           >
-            <img class="chart-img" :src="widget.img" />
+            <img class="chart-img" :src="widget.img" draggable="false" />
             <div class="chart-label">{{ widget.label }}</div>
           </div>
         </div>
@@ -45,12 +48,26 @@ export default {
     },
     UseIt(widget) {
       //   从配置项中获取基础配置
-      const _widget = {
+      const _widget = this.getWidgetData(widget);
+      this.addElements(_widget);
+    },
+    getWidgetData(widget) {
+      return {
         ...widget,
         ...widgetsConfig[widget.name],
         id: this.getRandomId(),
       };
-      this.addElements(_widget);
+    },
+    dragstart(event, widget) {
+      // 获取完整的组件属性
+      const _widget = this.getWidgetData(widget);
+      // event.dataTransfer.setData 方法，记录数据
+      event.dataTransfer.setData("text/plain", JSON.stringify(_widget));
+      // 代表拖拽的模式，copy代表复制
+      event.dataTransfer.effectAllowed = "copy";
+    },
+    dragenter(event) {
+      console.log("dragenter event", event);
     },
   },
 };

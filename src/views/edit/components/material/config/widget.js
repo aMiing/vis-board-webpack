@@ -7,7 +7,7 @@ export const widgetGroup = [
       {
         label: "文本",
         name: "commonText",
-        img: require("@/assets/widgets/3D-map.png"),
+        img: require("@/assets/widgets/common-title.png"),
       },
       {
         label: "滚动字幕",
