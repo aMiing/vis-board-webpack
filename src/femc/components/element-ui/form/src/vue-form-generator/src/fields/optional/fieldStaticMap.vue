@@ -12,7 +12,8 @@ export default {
   computed: {
     mapLink() {
       if (this.value) {
-        const options = defaults(this.schema.staticMapOptions || {}, {
+        let lat, lng;
+        let options = defaults(this.schema.staticMapOptions || {}, {
           lat: 'lat',
           lng: 'lng',
           zoom: 8,
@@ -20,12 +21,12 @@ export default {
           sizeY: 640,
         });
 
-        const lat = this.value[options.lat];
-        const lng = this.value[options.lng];
+        lat = this.value[options.lat];
+        lng = this.value[options.lng];
 
         let url = `http://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=${options.zoom}&size=${options.sizeX}x${options.sizeY}`;
 
-        const props = [
+        let props = [
           'scale',
           'format',
           'maptype',

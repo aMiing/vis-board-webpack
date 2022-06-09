@@ -32,7 +32,7 @@
           </div>
         </template>
         <template v-slot:preview="{ card }">
-          <img :src="card.img" class="preview-img" alt="预览图片" />
+          <img :src="card.backgroundImage" class="preview-img" alt="预览图片" />
         </template>
       </GtCardList>
     </div>
@@ -59,11 +59,6 @@ export default {
       dialogEditVisible: false,
       formLabelWidth: "120px",
       panels: [],
-      theNewPanel: {
-        title: "新屏幕",
-        img: defaultImg,
-        published: 0,
-      },
 
       operationList: [
         {
@@ -100,10 +95,13 @@ export default {
 
   methods: {
     addPanel(data) {
+      const defaultModel = Object.keys(screenConfig).reduce((total, e) => {
+        return Object.assign(total, { ...screenConfig[e]?.props });
+      }, {});
       const newPanel = {
-        ...screenConfig,
-        ...this.theNewPanel,
+        ...defaultModel,
         ...data,
+        backgroundImage: defaultImg,
         id: this.getId(),
         createTime: new Date().getTime(),
         creator: this.getUserInfo?.userName,

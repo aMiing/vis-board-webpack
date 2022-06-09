@@ -30,7 +30,7 @@ export default {
 
   computed: {
     items() {
-      const values = this.schema.values;
+      let values = this.schema.values;
       if (typeof values == 'function') {
         return values.apply(this, [this.model, this.schema]);
       } else return values;

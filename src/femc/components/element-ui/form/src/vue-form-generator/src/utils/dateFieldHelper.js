@@ -3,7 +3,7 @@ import fecha from 'fecha';
 export default {
   formatValueToField(value) {
     if (value != null) {
-      const dt = this.schema.format ? fecha.parse(value, this.schema.format) : new Date(value);
+      let dt = this.schema.format ? fecha.parse(value, this.schema.format) : new Date(value);
       return fecha.format(dt, this.getDateFormat());
     }
 
@@ -12,7 +12,7 @@ export default {
 
   formatValueToModel(value) {
     if (value != null) {
-      const m = fecha.parse(value, this.getDateFormat());
+      let m = fecha.parse(value, this.getDateFormat());
       if (this.schema.format) {
         value = fecha.format(m, this.schema.format);
       } else {

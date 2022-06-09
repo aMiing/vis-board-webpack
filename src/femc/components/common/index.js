@@ -7,3 +7,4 @@ export * from './text-ellipsis';
 export * from './card';
 export * from './affix';
 export * from './form-box';
+export * from './operation-group';

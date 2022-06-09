@@ -5,7 +5,7 @@ export default {
     // Get style classes of field
     getFieldRowClasses(field) {
       const hasErrors = this.fieldErrors(field).length > 0;
-      const baseClasses = {
+      let baseClasses = {
         [objGet(this.options, 'validationErrorClass', 'error')]: hasErrors,
         [objGet(this.options, 'validationSuccessClass', 'valid')]: !hasErrors,
         disabled: this.fieldDisabled(field),
@@ -27,7 +27,7 @@ export default {
       return baseClasses;
     },
     fieldErrors(field) {
-      const res = this.errors.filter(e => e.field === field);
+      let res = this.errors.filter(e => e.field === field);
       return res.map(item => item.error);
     },
     // Get disabled attr of field

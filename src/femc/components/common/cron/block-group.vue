@@ -1,5 +1,5 @@
 <template>
-  <div class="g-block-group" :class="{ '--week': type === 'week' }">
+  <div :class="`g-block-group --${type}`">
     <div
       v-for="item in data"
       :key="item.key"
@@ -53,6 +53,14 @@ export default {
       immediate: true,
       handler(type) {
         const strategy = {
+          minute: () => [
+            { key: 1, value: '每隔1分' },
+            { key: 5, value: '每隔5分' },
+            { key: 10, value: '每隔10分' },
+            { key: 15, value: '每隔15分' },
+            { key: 20, value: '每隔20分' },
+            { key: 30, value: '每隔30分' },
+          ],
           week: () => [
             { key: 2, value: '周一' },
             { key: 3, value: '周二' },
@@ -69,6 +77,20 @@ export default {
             result.push({ key: 'L', value: '当月最后一天', last: true });
             return result;
           },
+          year: () => [
+            { key: 1, value: '一月' },
+            { key: 2, value: '二月' },
+            { key: 3, value: '三月' },
+            { key: 4, value: '四月' },
+            { key: 5, value: '五月' },
+            { key: 6, value: '六月' },
+            { key: 7, value: '七月' },
+            { key: 8, value: '八月' },
+            { key: 9, value: '九月' },
+            { key: 10, value: '十月' },
+            { key: 11, value: '十一月' },
+            { key: 12, value: '十二月' },
+          ],
           default: () => [],
         };
         const execute = strategy[type] || strategy.default;
@@ -87,11 +109,11 @@ export default {
     handleItemClick(key) {
       if (this.readonly) return;
       const { value } = this;
-
       const index = value.indexOf(key);
       // 1.取消选中 2.仅剩下最后一个 3.取消当月最后一天会恢复之前的选择
       if (index > -1 && value.length === 1 && key !== 'L') {
-        this.$message && this.$message.error('请至少选择一天～');
+        this.$message &&
+          this.$message.error(`请至少选择${this.type === 'month' ? '一天' : '一个月'}～`);
         return;
       }
 
@@ -132,6 +154,16 @@ export default {
 
   &.--week .g-block-group__item {
     width: 38px;
+  }
+
+  &.--minute .g-block-group__item {
+    width: auto;
+    padding: 0 3px;
+  }
+
+  &.--year .g-block-group__item {
+    width: auto;
+    padding: 0 3px;
   }
 
   &__item {

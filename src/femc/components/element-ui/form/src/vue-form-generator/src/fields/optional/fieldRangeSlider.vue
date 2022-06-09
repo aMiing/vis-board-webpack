@@ -52,7 +52,7 @@ export default {
           [valueFrom, valueTo] = this.value;
         } else valueFrom = this.value;
 
-        const self = this;
+        let self = this;
         $(this.$el).ionRangeSlider(
           defaults(this.schema.rangeSliderOptions || {}, {
             type: 'single',

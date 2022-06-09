@@ -1,15 +1,42 @@
-export default {
-  title: "",
-  zoomType: "fill-width",
-  width: 1440,
-  height: 900,
-  whUnit: "px",
-  backgroundColor: "#1b1f25",
-  backgroundImage: "",
-  color: "#fff",
-  fontSize: 14,
-  fontUnit: "px",
-  fontWeight: 400,
-  fontFamily: "",
-  grideSpace: 10,
+const ScreenConfig = {
+  size: {
+    label: "尺寸",
+    props: {
+      width: 1440,
+      height: 900,
+      sizeUnit: "px",
+    },
+  },
+  background: {
+    label: "背景",
+    props: {
+      backgroundColor: "#000",
+      backgroundImage: "",
+    },
+  },
+  font: {
+    label: "字体",
+    props: {
+      fontColor: "#fff",
+      fontSize: 14,
+      fontUnit: "px",
+      fontWeight: 400,
+      fontFamily: "",
+    },
+  },
+  zoom: {
+    label: "缩放",
+    props: {
+      scale: 1,
+    },
+  },
+  gride: {
+    label: "网格",
+    props: {
+      gride: 20,
+    },
+  },
 };
+
+export { ScreenConfig };
+export default ScreenConfig;

@@ -16,7 +16,7 @@ const createDefaultObject = (schema, obj = {}) => {
 
 // Get a new model which contains only properties of multi-edit fields
 const getMultipleFields = schema => {
-  const res = [];
+  let res = [];
   each(schema.fields, field => {
     if (field.multi === true) res.push(field);
   });
@@ -26,17 +26,17 @@ const getMultipleFields = schema => {
 
 // Merge many models to one 'work model' by schema
 const mergeMultiObjectFields = (schema, objs) => {
-  const model = {};
+  let model = {};
 
-  const fields = getMultipleFields(schema);
+  let fields = getMultipleFields(schema);
 
   each(fields, field => {
     let mergedValue;
     let notSet = true;
-    const path = field.model;
+    let path = field.model;
 
     each(objs, obj => {
-      const v = get(obj, path);
+      let v = get(obj, path);
       if (notSet) {
         mergedValue = v;
         notSet = false;

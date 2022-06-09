@@ -16,7 +16,7 @@ import abstractField from '../abstractField';
 import { defaults, get as objGet } from 'lodash';
 import dateFieldHelper from '../../utils/dateFieldHelper';
 
-const inputFormat = 'YYYY-MM-DD';
+let inputFormat = 'YYYY-MM-DD';
 
 export default {
   mixins: [abstractField],

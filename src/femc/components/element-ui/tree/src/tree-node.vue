@@ -34,7 +34,8 @@
           tree.iconClass ? tree.iconClass : 'el-icon-caret-right',
         ]"
         @click.stop="handleExpandIconClick"
-      ></span>
+      >
+      </span>
       <el-checkbox
         v-if="showCheckbox"
         v-model="node.checked"
@@ -42,8 +43,9 @@
         :disabled="!!node.disabled"
         @click.native.stop
         @change="handleCheckChange"
-      ></el-checkbox>
-      <span v-if="node.loading" class="el-tree-node__loading-icon el-icon-loading"></span>
+      >
+      </el-checkbox>
+      <span v-if="node.loading" class="el-tree-node__loading-icon el-icon-loading"> </span>
       <node-content :node="node"></node-content>
     </div>
     <el-collapse-transition v-if="!virtualScroll">
@@ -62,22 +64,23 @@
           :show-checkbox="showCheckbox"
           :node="child"
           @node-expand="handleChildNodeExpand"
-        ></el-tree-node>
+        >
+        </el-tree-node>
       </div>
     </el-collapse-transition>
   </div>
 </template>
 
-<script lang="jsx">
-import ElCollapseTransition from "element-ui/lib/transitions/collapse-transition";
-import ElCheckbox from "element-ui/packages/checkbox";
-import emitter from "element-ui/lib/mixins/emitter";
-import { getNodeKey } from "./model/util";
+<script>
+import ElCollapseTransition from 'element-ui/lib/transitions/collapse-transition';
+import ElCheckbox from 'element-ui/packages/checkbox';
+import emitter from 'element-ui/lib/mixins/emitter';
+import { getNodeKey } from './model/util';
 
 export default {
-  name: "ElTreeNode",
+  name: 'ElTreeNode',
 
-  componentName: "ElTreeNode",
+  componentName: 'ElTreeNode',
 
   components: {
     ElCollapseTransition,
@@ -103,7 +106,7 @@ export default {
         ) : tree.$scopedSlots.default ? (
           tree.$scopedSlots.default({ node, data })
         ) : (
-          <span class='el-tree-node__label'>{node.label}</span>
+          <span class="el-tree-node__label">{node.label}</span>
         );
       },
     },
@@ -144,15 +147,15 @@ export default {
   },
 
   watch: {
-    "node.indeterminate"(val) {
+    'node.indeterminate'(val) {
       this.handleSelectChange(this.node.checked, val);
     },
 
-    "node.checked"(val) {
+    'node.checked'(val) {
       this.handleSelectChange(val, this.node.indeterminate);
     },
 
-    "node.expanded"(val) {
+    'node.expanded'(val) {
       this.$nextTick(() => (this.expanded = val));
       if (val) {
         this.childNodeRendered = true;
@@ -175,7 +178,7 @@ export default {
     }
 
     const props = tree.props || {};
-    const childrenKey = props["children"] || "children";
+    const childrenKey = props['children'] || 'children';
 
     this.$watch(`node.data.${childrenKey}`, () => {
       this.node.updateChildren();
@@ -184,6 +187,14 @@ export default {
     if (this.node.expanded) {
       this.expanded = true;
       this.childNodeRendered = true;
+    }
+
+    if (this.tree.accordion) {
+      this.$on('tree-node-expand', node => {
+        if (this.node !== node) {
+          this.node.collapse();
+        }
+      });
     }
   },
 
@@ -194,7 +205,7 @@ export default {
 
     handleSelectChange(checked, indeterminate) {
       if (this.oldChecked !== checked && this.oldIndeterminate !== indeterminate) {
-        this.tree.$emit("check-change", this.node.data, checked, indeterminate);
+        this.tree.$emit('check-change', this.node.data, checked, indeterminate);
       }
       this.oldChecked = checked;
       this.indeterminate = indeterminate;
@@ -204,7 +215,7 @@ export default {
       const store = this.tree.store;
       store.setCurrentNode(this.node);
       this.tree.$emit(
-        "current-change",
+        'current-change',
         store.currentNode ? store.currentNode.data : null,
         store.currentNode
       );
@@ -217,28 +228,28 @@ export default {
           target: { checked: !this.node.checked },
         });
       }
-      this.tree.$emit("node-click", this.node.data, this.node, this);
+      this.tree.$emit('node-click', this.node.data, this.node, this);
     },
 
     handleContextMenu(event) {
       if (
-        this.tree._events["node-contextmenu"] &&
-        this.tree._events["node-contextmenu"].length > 0
+        this.tree._events['node-contextmenu'] &&
+        this.tree._events['node-contextmenu'].length > 0
       ) {
         event.stopPropagation();
         event.preventDefault();
       }
-      this.tree.$emit("node-contextmenu", event, this.node.data, this.node, this);
+      this.tree.$emit('node-contextmenu', event, this.node.data, this.node, this);
     },
 
     handleExpandIconClick() {
       if (this.node.isLeaf) return;
       if (this.expanded) {
-        this.tree.$emit("node-collapse", this.node.data, this.node, this);
+        this.tree.$emit('node-collapse', this.node.data, this.node, this);
         this.node.collapse();
       } else {
         this.node.expand();
-        this.$emit("node-expand", this.node.data, this.node, this);
+        this.$emit('node-expand', this.node.data, this.node, this);
       }
     },
 
@@ -246,7 +257,7 @@ export default {
       this.node.setChecked(ev.target.checked, !this.tree.checkStrictly);
       this.$nextTick(() => {
         const store = this.tree.store;
-        this.tree.$emit("check", this.node.data, {
+        this.tree.$emit('check', this.node.data, {
           checkedNodes: store.getCheckedNodes(),
           checkedKeys: store.getCheckedKeys(),
           halfCheckedNodes: store.getHalfCheckedNodes(),
@@ -256,18 +267,18 @@ export default {
     },
 
     handleChildNodeExpand(nodeData, node, instance) {
-      this.broadcast("ElTreeNode", "tree-node-expand", node);
-      this.tree.$emit("node-expand", nodeData, node, instance);
+      this.broadcast('ElTreeNode', 'tree-node-expand', node);
+      this.tree.$emit('node-expand', nodeData, node, instance);
     },
 
     handleDragStart(event) {
       if (!this.tree.draggable) return;
-      this.tree.$emit("tree-node-drag-start", event, this);
+      this.tree.$emit('tree-node-drag-start', event, this);
     },
 
     handleDragOver(event) {
       if (!this.tree.draggable) return;
-      this.tree.$emit("tree-node-drag-over", event, this);
+      this.tree.$emit('tree-node-drag-over', event, this);
       event.preventDefault();
     },
 
@@ -277,7 +288,7 @@ export default {
 
     handleDragEnd(event) {
       if (!this.tree.draggable) return;
-      this.tree.$emit("tree-node-drag-end", event, this);
+      this.tree.$emit('tree-node-drag-end', event, this);
     },
   },
 };

@@ -1,10 +1,13 @@
-import baseConfig from "./base";
-import { TextConfig } from "./text";
-import { ImageConfig } from "./image";
-import scrollTextConfig from "./scrollText";
+import { BaseConfig } from "./base";
+const modules = require.context("./libs/", false, /(.*?)\.js$/);
+// console.log("modules", modules);
 
-const commonText = { ...baseConfig, ...TextConfig };
-const scrollText = { ...baseConfig, ...scrollTextConfig };
-const commonImage = { ...baseConfig, ...ImageConfig };
+const result = modules.keys().reduce((total, key) => {
+  const config = modules(key)?.default;
+  const name = key.replaceAll(/\.\/|\.js/g, "");
+  return Object.assign(total, { [name]: { ...BaseConfig, ...config } });
+}, {});
 
-export default { commonText, commonImage, scrollText };
+// console.log("result", result);
+
+export default result;

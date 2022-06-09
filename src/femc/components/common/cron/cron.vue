@@ -44,7 +44,7 @@ export default {
     },
     option: {
       type: String,
-      default: () => 'minute,hour,day,week,month',
+      default: () => 'minute,hour,day,week,month,year',
     },
   },
   data() {
@@ -52,6 +52,9 @@ export default {
       typeList: [],
       typeLabel: '',
       data: {
+        everyMinute: {
+          selectedBlock: [],
+        },
         everyHour: {
           timePickerList: [this.getTimePickerItem()],
         },
@@ -63,6 +66,10 @@ export default {
           timePickerList: [this.getTimePickerItem()],
         },
         everyMonth: {
+          selectedBlock: [1],
+          timePickerList: [this.getTimePickerItem()],
+        },
+        everyYear: {
           selectedBlock: [],
           timePickerList: [this.getTimePickerItem()],
         },
@@ -90,9 +97,16 @@ export default {
     option: {
       immediate: true,
       handler(option) {
-        option = option || 'minute,hour,day,week,month';
+        option = option || 'minute,hour,day,week,month,year';
         const typeList = [];
-        const map = { minute: '每分', hour: '每时', day: '每天', week: '每周', month: '每月' };
+        const map = {
+          minute: '每分',
+          hour: '每时',
+          day: '每天',
+          week: '每周',
+          month: '每月',
+          year: '每年',
+        };
         option.split(',').forEach(item => {
           const key = item.trim();
           if (map[key]) {
@@ -122,6 +136,9 @@ export default {
         case '每月':
           type = 'everyMonth';
           break;
+        case '每年':
+          type = 'everyYear';
+          break;
         default:
           type = 'everyMinute';
       }
@@ -130,11 +147,12 @@ export default {
     },
     getDefaultCron() {
       const strategy = {
-        minute: '0 * * * * ? *',
+        minute: '0 0/1 * * * ? *',
         hour: '0 0 * * * ? *',
         day: '0 0 0 * * ? *',
         week: '0 0 0 ? * 2 *',
         month: '0 0 0 1 * ? *',
+        year: '0 0 0 1 1 ? *',
       };
 
       const firstOption = this.option.split(',').map(item => item.trim())[0];
@@ -143,10 +161,13 @@ export default {
     transformCron2Data(value) {
       const newValue = value || this.getDefaultCron();
 
-      const [second, minute, hour, day, , week] = newValue.split(' ');
+      const [second, minute, hour, day, month, week, year] = newValue.split(' ');
 
-      if (minute === '*') {
+      if (minute === '*' || minute.indexOf('/') > -1) {
         this.typeLabel = '每分';
+        if (minute.indexOf('/') > -1) {
+          this.data.everyMinute.selectedBlock = [Number(minute.split('/')[1])];
+        }
       } else if (hour === '*') {
         this.typeLabel = '每时';
       } else if (day === '*') {
@@ -154,10 +175,15 @@ export default {
       } else if (day === '?') {
         this.typeLabel = '每周';
         this.data.everyWeek.selectedBlock = week.split(',').map(item => Number(item));
-      } else {
+      } else if (month === '*') {
         this.typeLabel = '每月';
         this.data.everyMonth.selectedBlock =
           day === 'L' ? [day] : day.split(',').map(item => Number(item));
+      } else if (year === '*' && month !== '*') {
+        this.typeLabel = '每年';
+        this.data.everyMonth.selectedBlock =
+          day === 'L' ? [day] : day.split(',').map(item => Number(item));
+        this.data.everyYear.selectedBlock = month.split(',').map(item => Number(item));
       }
 
       this.transformHMS2Array(hour, minute, second);
@@ -175,14 +201,9 @@ export default {
           return { key: Math.random(), value: `${newHour}:${supply0(val)}:${newSecond}` };
         });
       } else {
-        // newMinute = supply0(minute);
-        const minuteArr = minute.split(',');
-        const secondArr = second.split(',');
-        data = hour.split(',').map((val, index) => {
-          return {
-            key: Math.random(),
-            value: `${supply0(val)}:${supply0(minuteArr[index])}:${supply0(secondArr[index])}`,
-          };
+        newMinute = supply0(minute);
+        data = hour.split(',').map(val => {
+          return { key: Math.random(), value: `${supply0(val)}:${newMinute}:${newSecond}` };
         });
       }
 
@@ -192,17 +213,21 @@ export default {
       const { data: rawData, type } = this;
       const data = rawData[type];
       let cron;
-
       if (data) {
         const cronArr = ['*', '*', '?', '*'];
         const hms = [[], [], []];
+        if (type === 'everyMinute') {
+          // 每分直接更新“分”返回
+          cron = `0 0/${data.selectedBlock[0] || 1} * * * ? *`;
+          this.$emit('change', cron);
+          return;
+        }
         data.timePickerList.forEach(timePicker => {
           const timeArr = timePicker.value.split(':');
           timeArr.forEach((item, index) => {
             const time = Number(item);
             const resultItem = hms[hms.length - index - 1];
-            // if (!resultItem.includes(time))
-            resultItem.push(time);
+            if (!resultItem.includes(time)) resultItem.push(time);
           });
         });
         cronArr.unshift(...hms.map(arr => arr.join(',')));
@@ -210,19 +235,29 @@ export default {
         if (this.type === 'everyHour') cronArr[2] = '*';
 
         let weekOrMonth;
+        const dayIndex = 3;
+        const monthIndex = 4;
+        const weekIndex = 5;
         if (data.selectedBlock) {
-          const weekIndex = 5;
-          const dayIndex = 3;
           weekOrMonth = data.selectedBlock.join(',');
           if (this.type === 'everyWeek') {
             cronArr[dayIndex] = '?';
             cronArr[weekIndex] = weekOrMonth || 2;
-          } else {
+          } else if (this.type === 'everyMonth') {
             cronArr[dayIndex] = weekOrMonth || 1;
             cronArr[weekIndex] = '?';
           }
         }
 
+        let year;
+        if (rawData['everyYear'].selectedBlock) {
+          year = rawData['everyYear'].selectedBlock.join(',');
+        }
+        if (this.type === 'everyYear') {
+          cronArr[monthIndex] = year || 1;
+          cronArr[dayIndex] = rawData['everyMonth'].selectedBlock || 1;
+          cronArr[weekIndex] = '?';
+        }
         cron = cronArr.join(' ');
       } else {
         cron = this.getDefaultCron();
@@ -242,7 +277,7 @@ export default {
           let value;
           // 同步分钟信息
           if (this.type !== 'everyHour') {
-            const hms = this.data[this.type].timePickerList.at(-1).value;
+            const hms = this.data[this.type].timePickerList[0].value;
             value = `00:${hms.slice(3, 5)}:00`;
           }
 
@@ -259,12 +294,12 @@ export default {
           this.updateCron();
         };
 
-        // const handleMinuteChange = minute => {
-        //   timePickerList.forEach(timePicker => {
-        //     // 同步分钟信息
-        //     // timePicker.value = timePicker.value.replace(/(?<=:)\d{2}(?=:)/, minute);
-        //   });
-        // };
+        const handleMinuteChange = minute => {
+          timePickerList.forEach(timePicker => {
+            // 同步分钟信息
+            timePicker.value = timePicker.value.replace(/(?<=:)\d{2}(?=:)/, minute);
+          });
+        };
 
         return (
           <div
@@ -301,7 +336,16 @@ export default {
       };
 
       const strategy = {
-        everyMinute: () => null,
+        everyMinute: () => (
+          <div key="everyMinute">
+            <block-group
+              type="minute"
+              singleSelect={true}
+              readonly={this.readonly}
+              vModel={this.data.everyMinute.selectedBlock}
+            />
+          </div>
+        ),
         everyHour: () => list({ key: 'everyHour', type: 'minute' }),
         everyDay: () => list({ key: 'everyDay', type: 'hour,minute' }),
         everyWeek: () => (
@@ -318,11 +362,29 @@ export default {
         everyMonth: () => (
           <div key="everyMonth">
             <block-group
+              type="month"
               singleSelect={this.singleDatePicker}
               readonly={this.readonly}
               vModel={this.data.everyMonth.selectedBlock}
             />
             {list({ key: 'everyMonth', type: 'hour,minute' })}
+          </div>
+        ),
+        everyYear: () => (
+          <div key="everyYear">
+            <block-group
+              type="year"
+              singleSelect={this.singleDatePicker}
+              readonly={this.readonly}
+              vModel={this.data.everyYear.selectedBlock}
+            />
+            <block-group
+              type="month"
+              singleSelect={this.singleDatePicker}
+              readonly={this.readonly}
+              vModel={this.data.everyMonth.selectedBlock}
+            />
+            {list({ key: 'everyYear', type: 'hour,minute' })}
           </div>
         ),
       };

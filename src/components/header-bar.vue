@@ -22,40 +22,39 @@
 </template>
 <script>
 import operatorGroup from "@/components/operator-group/index.vue";
-import { mapGetters } from "vuex";
-const btnList = [
-  {
-    name: "保存",
-    iconClass: "icon-baocun",
-    click: row => console.log(row),
-  },
-  {
-    name: "上一步",
-    iconClass: "icon-houtui-shi",
-    click: row => console.log(row),
-  },
-  {
-    name: "下一步",
-    iconClass: "icon-qianjin-shi",
-    click: row => console.log(row),
-  },
-  {
-    name: "发布",
-    iconClass: "icon-fabu",
-    click: row => console.log(row),
-  },
-  {
-    name: "预览",
-    iconClass: "icon-yulan",
-    click: row => console.log(row),
-  },
-];
+import { mapGetters, mapActions } from "vuex";
 export default {
   name: "HeaderBar",
   components: { operatorGroup },
   data() {
     return {
-      btnList,
+      btnList: [
+        {
+          name: "保存",
+          iconClass: "icon-baocun",
+          click: row => this.save(row),
+        },
+        {
+          name: "上一步",
+          iconClass: "icon-houtui-shi",
+          click: row => console.log(row),
+        },
+        {
+          name: "下一步",
+          iconClass: "icon-qianjin-shi",
+          click: row => console.log(row),
+        },
+        {
+          name: "发布",
+          iconClass: "icon-fabu",
+          click: row => console.log(row),
+        },
+        {
+          name: "预览",
+          iconClass: "icon-yulan",
+          click: row => console.log(row),
+        },
+      ],
       sysName: "VMS-BD",
       collapsed: false,
       sysUserName: "amingxiansen",
@@ -67,8 +66,12 @@ export default {
     isEdit() {
       return this.$route?.name === "edit";
     },
+    id() {
+      return this.$route?.query?.id;
+    },
   },
   methods: {
+    ...mapActions("panel", ["saveData"]),
     //退出登录
     logout: function () {
       this.$confirm("确认退出吗?", "提示", {
@@ -79,6 +82,9 @@ export default {
           this.$router.push("/login");
         })
         .catch(() => {});
+    },
+    save(row) {
+      this.saveData();
     },
   },
 };

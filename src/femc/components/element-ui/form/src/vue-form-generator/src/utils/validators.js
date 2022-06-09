@@ -10,7 +10,7 @@ import {
 } from 'lodash';
 import fecha from 'fecha';
 
-const resources = {
+let resources = {
   fieldIsRequired: 'This field is required!',
   invalidFormat: 'Invalid format!',
 
@@ -71,10 +71,10 @@ const validators = {
   },
 
   number(value, field, model, messages = resources) {
-    const res = checkEmpty(value, field.required, messages, field);
+    let res = checkEmpty(value, field.required, messages, field);
     if (res != null) return res;
 
-    const err = [];
+    let err = [];
     if (isFinite(value)) {
       if (!isNil(field.min) && value < field.min) {
         err.push(msg(messages.numberTooSmall, field.min));
@@ -91,9 +91,9 @@ const validators = {
   },
 
   integer(value, field, model, messages = resources) {
-    const res = checkEmpty(value, field.required, messages, field);
+    let res = checkEmpty(value, field.required, messages, field);
     if (res != null) return res;
-    const errs = validators.number(value, field, model, messages);
+    let errs = validators.number(value, field, model, messages);
 
     if (!isInteger(value)) {
       errs.push(msg(messages.invalidInteger));
@@ -103,7 +103,7 @@ const validators = {
   },
 
   double(value, field, model, messages = resources) {
-    const res = checkEmpty(value, field.required, messages, field);
+    let res = checkEmpty(value, field.required, messages, field);
     if (res != null) return res;
 
     if (!isNumber(value) || isNaN(value)) {
@@ -112,10 +112,10 @@ const validators = {
   },
 
   string(value, field, model, messages = resources) {
-    const res = checkEmpty(value, field.required, messages, field);
+    let res = checkEmpty(value, field.required, messages, field);
     if (res != null) return res;
 
-    const err = [];
+    let err = [];
     if (isString(value)) {
       if (!isNil(field.min) && value.length < field.min) {
         err.push(msg(messages.textTooSmall, value.length, field.min));
@@ -154,25 +154,25 @@ const validators = {
   },
 
   date(value, field, model, messages = resources) {
-    const res = checkEmpty(value, field.required, messages, field);
+    let res = checkEmpty(value, field.required, messages, field);
     if (res != null) return res;
 
-    const m = new Date(value);
+    let m = new Date(value);
     if (isNaN(m.getDate())) {
       return [msg(messages.invalidDate)];
     }
 
-    const err = [];
+    let err = [];
 
     if (!isNil(field.min)) {
-      const min = new Date(field.min);
+      let min = new Date(field.min);
       if (m.valueOf() < min.valueOf()) {
         err.push(msg(messages.dateIsEarly, fecha.format(m), fecha.format(min)));
       }
     }
 
     if (!isNil(field.max)) {
-      const max = new Date(field.max);
+      let max = new Date(field.max);
       if (m.valueOf() > max.valueOf()) {
         err.push(msg(messages.dateIsLate, fecha.format(m), fecha.format(max)));
       }
@@ -182,11 +182,11 @@ const validators = {
   },
 
   regexp(value, field, model, messages = resources) {
-    const res = checkEmpty(value, field.required, messages, field);
+    let res = checkEmpty(value, field.required, messages, field);
     if (res != null) return res;
 
     if (!isNil(field.pattern)) {
-      const re = new RegExp(field.pattern);
+      let re = new RegExp(field.pattern);
       if (!re.test(value)) {
         return [msg(messages.invalidFormat)];
       }
@@ -194,10 +194,10 @@ const validators = {
   },
 
   email(value, field, model, messages = resources) {
-    const res = checkEmpty(value, field.required, messages, field);
+    let res = checkEmpty(value, field.required, messages, field);
     if (res != null) return res;
 
-    const re =
+    let re =
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/; // eslint-disable-line no-useless-escape
     if (!re.test(value)) {
       return [msg(messages.invalidEmail)];
@@ -205,10 +205,10 @@ const validators = {
   },
 
   url(value, field, model, messages = resources) {
-    const res = checkEmpty(value, field.required, messages, field);
+    let res = checkEmpty(value, field.required, messages, field);
     if (res != null) return res;
 
-    const re =
+    let re =
       /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g; // eslint-disable-line no-useless-escape
     if (!re.test(value)) {
       return [msg(messages.invalidURL)];
@@ -216,7 +216,7 @@ const validators = {
   },
 
   creditCard(value, field, model, messages = resources) {
-    const res = checkEmpty(value, field.required, messages, field);
+    let res = checkEmpty(value, field.required, messages, field);
     if (res != null) return res;
 
     /*  From validator.js code
@@ -254,20 +254,20 @@ const validators = {
   },
 
   alpha(value, field, model, messages = resources) {
-    const res = checkEmpty(value, field.required, messages, field);
+    let res = checkEmpty(value, field.required, messages, field);
     if (res != null) return res;
 
-    const re = /^[a-zA-Z]*$/;
+    let re = /^[a-zA-Z]*$/;
     if (!re.test(value)) {
       return [msg(messages.invalidTextContainNumber)];
     }
   },
 
   alphaNumeric(value, field, model, messages = resources) {
-    const res = checkEmpty(value, field.required, messages, field);
+    let res = checkEmpty(value, field.required, messages, field);
     if (res != null) return res;
 
-    const re = /^[a-zA-Z0-9]*$/;
+    let re = /^[a-zA-Z0-9]*$/;
     if (!re.test(value)) {
       return [msg(messages.invalidTextContainSpec)];
     }

@@ -1,3 +1,4 @@
+import { mapActions, mapMutations } from "vuex";
 export default {
   data() {
     return {
@@ -9,7 +10,9 @@ export default {
       return this.$route?.query?.id;
     },
     screen() {
-      return this.panels.find(e => e.id === this.id);
+      const target = this.panels.find(e => e.id === this.id);
+      this.updateData(target);
+      return target;
     },
   },
   created() {
@@ -19,10 +22,12 @@ export default {
     this.recordView();
   },
   methods: {
-    updateData() {
-      const panelListStr = JSON.stringify(this.panels);
-      //   存储或更新localstorage
-      window.sessionStorage.setItem("panelListStr", panelListStr);
+    ...mapMutations("panel", ["setData"]),
+    updateData(data) {
+      // const panelListStr = JSON.stringify(this.panels);
+      // //   存储或更新localstorage
+      // window.sessionStorage.setItem("panelListStr", panelListStr);
+      this.setData(data);
     },
     getPanelList() {
       //   获取panelList
@@ -32,7 +37,7 @@ export default {
     recordView() {
       console.log("this.screen", this.screen);
       this.screen.viewCount++;
-      this.updateData();
+      this.updateData({ id: this.id, viewCount: this.screen.viewCount });
     },
   },
 };

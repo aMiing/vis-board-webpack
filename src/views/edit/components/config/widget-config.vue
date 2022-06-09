@@ -1,8 +1,9 @@
 <template>
   <div class="setting-content">
-    <el-tabs v-if="config" type="border-card" :stretch="true">
+    <el-tabs v-if="activatedEl" type="border-card" :stretch="true">
       <el-tab-pane label="样式">
-        <attrConfig :data="data" />
+        <div class="widget-title">组件名称： {{ activatedEl.label || "--" }}</div>
+        <attrConfig :data="activatedEl" />
       </el-tab-pane>
       <el-tab-pane label="数据">
         <span>數據部分</span>
@@ -13,17 +14,17 @@
         </h3>
       </el-tab-pane>
     </el-tabs>
-    <div class="no-data">
+    <div v-else class="no-data">
       <p>请先选择组件~</p>
     </div>
   </div>
 </template>
 <script>
-import attrConfig from "./attrs";
+import attrConfig from "./widget/attributes.vue";
 export default {
   name: "WidgetConfig",
   props: {
-    config: {
+    activatedEl: {
       type: Object,
       default: null,
     },
@@ -39,12 +40,18 @@ export default {
       },
     };
   },
+  computed: {},
 };
 </script>
 <style lang="scss" scoped>
 .setting-content {
   position: relative;
   height: 100%;
+  .widget-title {
+    line-height: 32px;
+    padding: 4px 0;
+    font-weight: 600;
+  }
 }
 .no-data {
   text-align: center;

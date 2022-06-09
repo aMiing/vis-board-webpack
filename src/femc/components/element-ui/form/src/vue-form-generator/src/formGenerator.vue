@@ -114,21 +114,23 @@ export default {
 
   computed: {
     fields() {
-      const res = [];
+      let res = [];
       if (this.schema && this.schema.fields) {
         forEach(this.schema.fields, field => {
           if (!this.multiple || field.multi === true) res.push(field);
         });
       }
+
       return res;
     },
     groups() {
-      const res = [];
+      let res = [];
       if (this.schema && this.schema.groups) {
         forEach(this.schema.groups.slice(0), group => {
           res.push(group);
         });
       }
+
       return res;
     },
   },
@@ -192,7 +194,7 @@ export default {
         });
       }
 
-      const isValid = this.errors.length === 0;
+      let isValid = this.errors.length === 0;
       this.$emit('validated', isValid, this.errors, this);
     },
 
@@ -207,8 +209,8 @@ export default {
       }
       this.clearValidationErrors();
 
-      const fields = [];
-      const results = [];
+      let fields = [];
+      let results = [];
 
       forEach(this.$children, child => {
         if (isFunction(child.validate)) {
@@ -217,8 +219,8 @@ export default {
         }
       });
 
-      const handleErrors = errors => {
-        const formErrors = [];
+      let handleErrors = errors => {
+        let formErrors = [];
         forEach(errors, (err, i) => {
           if (isArray(err) && err.length > 0) {
             forEach(err, error => {

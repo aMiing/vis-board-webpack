@@ -26,15 +26,16 @@ const routeList = [
           title: "看板制作",
         },
       },
-      {
-        path: "preview",
-        name: "preview",
-        component: () => import(/* webpackChunkName: "preview" */ "@/views/preview/index.vue"),
-        meta: {
-          title: "预览",
-        },
-      },
     ],
+  },
+
+  {
+    path: "preview",
+    name: "preview",
+    component: () => import(/* webpackChunkName: "preview" */ "@/views/preview/index.vue"),
+    meta: {
+      title: "预览",
+    },
   },
 
   {

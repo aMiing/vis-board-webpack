@@ -24,9 +24,9 @@ export default {
         // prevent a <form /> from having it's submit event triggered
         // when we have to validate data first
         $event.preventDefault();
-        const validateAsync = objGet(this.formOptions, 'validateAsync', false);
-        const errors = this.vfg.validate();
-        const handleErrors = errors => {
+        let validateAsync = objGet(this.formOptions, 'validateAsync', false);
+        let errors = this.vfg.validate();
+        let handleErrors = errors => {
           if ((validateAsync && !isEmpty(errors)) || (!validateAsync && !errors)) {
             if (isFunction(this.schema.onValidationError)) {
               this.schema.onValidationError(this.model, this.schema, errors, $event);

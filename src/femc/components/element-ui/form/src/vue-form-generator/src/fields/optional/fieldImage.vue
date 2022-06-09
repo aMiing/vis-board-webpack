@@ -59,7 +59,7 @@ export default {
 
   watch: {
     model() {
-      const el = this.$el.querySelector('input.file');
+      let el = this.$el.querySelector('input.file');
       if (el) {
         el.value = '';
       }
@@ -72,7 +72,7 @@ export default {
     },
 
     fileChanged(event) {
-      const reader = new FileReader();
+      let reader = new FileReader();
       reader.onload = e => {
         this.value = e.target.result;
       };

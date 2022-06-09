@@ -4,7 +4,7 @@
     <div class="left-config__panel">
       <g-drag-box
         placement="right"
-        span="300"
+        span="320"
         min="0"
         max="400"
         collapse-button
@@ -20,15 +20,20 @@
       <div class="screen-content">
         <div class="screen-scroll-box">
           <div ref="screen-content__wrap" class="screen-content__wrap" :style="contentStyle">
-            <mainScreen ref="main-screen" :screen="screen" @updateParentStyle="updateParentStyle" />
+            <mainScreen
+              ref="main-screen"
+              :screen="screen"
+              @updateParentStyle="updateParentStyle"
+              @onActivated="onWidgetActivated"
+            />
           </div>
         </div>
         <!-- 缩放控制器 -->
         <div class="screen-content__operations">
-          <div class="scale-label">缩放比例：</div>
+          <div class="scale-label">缩放比例</div>
           <div class="scale-slider-wrap">
             <el-slider
-              v-model="scale"
+              v-model="screen.scale"
               :max="1"
               :min="0"
               :step="0.01"
@@ -37,7 +42,7 @@
               @change="handleScaleChange"
             ></el-slider>
           </div>
-          <div class="scale-value">{{ String(scale).substring(0, 4) }}</div>
+          <div class="scale-value">{{ screen.scale.toFixed(2) }}</div>
         </div>
       </div>
     </div>
@@ -45,14 +50,19 @@
     <div class="right-config__panel">
       <g-drag-box
         placement="left"
-        span="0"
+        span="360"
         min="0"
-        max="400"
+        max="480"
         collapse-button
         collapse2min
         :drag="true"
       >
-        <configPage :type="currentType" v-model="screen" />
+        <property-config
+          :type="currentType"
+          :value="screen"
+          :activatedEl="activatedEl"
+          :clickTarget="clickTarget"
+        ></property-config>
       </g-drag-box>
     </div>
   </div>
@@ -60,7 +70,7 @@
 
 <script>
 import commonHeader from "./components/header";
-import configPage from "./components/config-page";
+import PropertyConfig from "./components/property-config";
 import materialList from "./components/material";
 import mainScreen from "./components/main-screen";
 import detailMix from "@/mixins/detail";
@@ -71,7 +81,7 @@ export default {
   name: "EditPage",
   components: {
     commonHeader,
-    configPage,
+    PropertyConfig,
     materialList,
     mainScreen,
   },
@@ -84,6 +94,8 @@ export default {
       currentType: "screen",
       contentStyle: { width: "unset", height: "unset" },
       scale: 1,
+      activatedEl: null, //当前激活的组件
+      clickTarget: "screen",
     };
   },
   created() {
@@ -97,22 +109,33 @@ export default {
   methods: {
     ...mapMutations("panel", ["setPanelId"]),
     updateParentStyle(scale) {
-      const { width, height, whUnit = "" } = this.screen;
-      this.contentStyle["width"] = width * scale + whUnit;
-      this.contentStyle["height"] = height * scale + whUnit;
+      const { width, height, sizeUnit } = this.screen;
+      this.contentStyle["width"] = width * scale + sizeUnit;
+      this.contentStyle["height"] = height * scale + sizeUnit;
     },
     stageResize() {
       debounce(() => {
-        const { width, height } = this.$refs["screen-content__wrap"].getBoundingClientRect();
-        this.scale = Math.min(width / this.screen.width, height / this.screen.height);
-        this.$refs["main-screen"]?.updateScale(this.scale);
-        this.updateParentStyle(this.scale);
+        const { width: parentWidth, height: parentHeight } =
+          this.$refs["screen-content__wrap"].getBoundingClientRect();
+        const { width, height } = this.screen;
+        const scale = Math.min(parentWidth / width, parentWidth / height);
+        this.screen.scale = Number(scale.toFixed(2));
+        this.$refs["main-screen"]?.updateScale(scale);
+        console.log("scale", scale);
+        this.updateParentStyle(scale);
       }, 300)();
     },
     handleScaleChange(val) {
       this.scale = val;
       this.$refs["main-screen"]?.updateScale(this.scale);
       this.updateParentStyle(this.scale);
+    },
+    onWidgetActivated(ele) {
+      console.log("onWidgetActivated");
+      if (ele) {
+        this.activatedEl = ele;
+        this.clickTarget = "widget";
+      } else this.clickTarget = "screen";
     },
   },
 };

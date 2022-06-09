@@ -56,7 +56,7 @@ export default {
     },
 
     options() {
-      const values = this.schema.values;
+      let values = this.schema.values;
       if (typeof values == 'function') {
         return values.apply(this, [this.model, this.schema]);
       } else {
@@ -89,13 +89,13 @@ export default {
       this.value = value;
     },
     addTag(newTag, id) {
-      const onNewTag = this.selectOptions.onNewTag;
+      let onNewTag = this.selectOptions.onNewTag;
       if (typeof onNewTag == 'function') {
         onNewTag(newTag, id, this.options, this.value);
       }
     },
     onSearchChange(searchQuery, id) {
-      const onSearch = this.selectOptions.onSearch;
+      let onSearch = this.selectOptions.onSearch;
       if (typeof onSearch == 'function') {
         onSearch(searchQuery, id, this.options);
       }

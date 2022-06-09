@@ -21,7 +21,7 @@ export const widgetGroup = [
       },
       {
         label: "时间控件",
-        name: "Time",
+        name: "timer",
         img: require("@/assets/widgets/time.png"),
       },
       {

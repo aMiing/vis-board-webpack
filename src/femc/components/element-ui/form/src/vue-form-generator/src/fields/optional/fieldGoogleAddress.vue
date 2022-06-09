@@ -72,14 +72,14 @@ export default {
      * @return void
      */
     pipeAddress() {
-      const place = this.autocomplete.getPlace();
+      let place = this.autocomplete.getPlace();
       if (place) {
         this.value = place.formatted_address;
 
-        const data = {};
+        let data = {};
         if (place.address_components !== undefined) {
           for (let i = 0; i < place.address_components.length; i++) {
-            const input = place.address_components[i].types[0];
+            let input = place.address_components[i].types[0];
             if (this.inputs[input]) {
               data[input] = place.address_components[i][this.inputs[input]];
             }
@@ -99,12 +99,12 @@ export default {
     geolocate() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(position => {
-          const geolocation = {
+          let geolocation = {
             lat: position.coords.latitude,
             lng: position.coords.longitude,
           };
 
-          const circle = new window.google.maps.Circle({
+          let circle = new window.google.maps.Circle({
             center: geolocation,
             radius: position.coords.accuracy,
           });

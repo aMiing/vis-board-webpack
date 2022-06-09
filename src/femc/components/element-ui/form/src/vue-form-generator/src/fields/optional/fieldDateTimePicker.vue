@@ -23,7 +23,7 @@ import abstractField from '../abstractField';
 import { defaults } from 'lodash';
 import dateFieldHelper from '../../utils/dateFieldHelper';
 
-const inputFormat = 'YYYY-MM-DD HH:mm:ss';
+let inputFormat = 'YYYY-MM-DD HH:mm:ss';
 
 export default {
   mixins: [abstractField],
@@ -31,7 +31,7 @@ export default {
   mounted() {
     this.$nextTick(function () {
       if (window.$ && window.$.fn.datetimepicker) {
-        const input = this.$el.querySelector('.form-control');
+        let input = this.$el.querySelector('.form-control');
         $(this.$el)
           .datetimepicker(
             defaults(this.schema.dateTimePickerOptions || {}, {

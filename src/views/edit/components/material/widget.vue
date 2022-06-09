@@ -34,7 +34,7 @@ export default {
   name: "Widget",
   data() {
     return {
-      activeNames: "",
+      activeNames: widgetGroup[0].name,
       widgetGroup,
     };
   },
@@ -52,9 +52,13 @@ export default {
       this.addElements(_widget);
     },
     getWidgetData(widget) {
+      const target = widgetsConfig[widget.name];
+      const initConfig = Object.keys(target).reduce((total, e) => {
+        return Object.assign(total, { ...(target[e]?.props || {}) });
+      }, {});
       return {
         ...widget,
-        ...widgetsConfig[widget.name],
+        ...initConfig,
         id: this.getRandomId(),
       };
     },

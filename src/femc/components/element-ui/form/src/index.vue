@@ -77,7 +77,7 @@ export default {
   },
   methods: {
     meregeValidator(validators) {
-      for (const key in validators) {
+      for (let key in validators) {
         this.validators[key] = validators[key];
       }
     },

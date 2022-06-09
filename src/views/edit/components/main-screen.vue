@@ -16,8 +16,8 @@
       :parent="true"
       :grid="[20, 20]"
       :rotatable="true"
-      :w="item.width"
-      :h="item.height"
+      :w="item.width + 2"
+      :h="item.height + 2"
       :x="item.posX"
       :y="item.posY"
       :r="item.romate"
@@ -30,12 +30,12 @@
       @resizing="(x, y, w, h) => resizing({ x, y, w, h }, item)"
       @activated="onActivated(item)"
       @deactivated="onDeactivated(item)"
-      @dragging="onDrag"
-      @rotating="onRotating"
+      @dragging="(x, y) => onDrag(x, y, item)"
+      @rotating="romate => onRotating(romate, item)"
       @refLineParams="getRefLineParams"
     >
       <div class="component-event" @click.stop="loadSetting('widget', item.id)">
-        <component :is="item.name" :data="item"></component>
+        <component :is="item.name" :data="transStyle(item)"></component>
       </div>
     </vue-drag-resize-rotate>
     <span
@@ -60,23 +60,7 @@
 
 <script>
 import VueDragResizeRotate from "@gausszhou/vue-drag-resize-rotate";
-import CommonText from "@/components/widgets/CommonTitle";
-import linesText from "@/components/widgets/linesText";
-import scrollText from "@/components/widgets/scrollText";
-import Time from "@/components/widgets/Time";
-import scrollCards from "@/components/widgets/scrollCards";
-import lineChart from "@/components/widgets/lineChart";
-import radarChart from "@/components/widgets/radarChart";
-import barChart from "@/components/widgets/barChart";
-import horizontalBarChart from "@/components/widgets/horizontalBarChart";
-import pieChart from "@/components/widgets/pieChart";
-import ringChart from "@/components/widgets/ringChart";
-import pointChart from "@/components/widgets/pointChart";
-import mapChart from "@/components/widgets/mapChart";
-import dashbord from "@/components/widgets/dashbord";
-import seriesDashbord from "@/components/widgets/seriesDashbord";
-import borderWidget from "@/components/widgets/border";
-import iconFont from "@/components/widgets/iconFont";
+import modules from "@/components/widgets/index.js";
 
 import { mapGetters, mapActions } from "vuex";
 export default {
@@ -89,23 +73,7 @@ export default {
   },
   components: {
     VueDragResizeRotate,
-    CommonText,
-    linesText,
-    Time,
-    scrollText,
-    scrollCards,
-    lineChart,
-    radarChart,
-    barChart,
-    horizontalBarChart,
-    pieChart,
-    ringChart,
-    pointChart,
-    mapChart,
-    dashbord,
-    seriesDashbord,
-    borderWidget,
-    iconFont,
+    ...modules,
   },
 
   data() {
@@ -123,12 +91,11 @@ export default {
       pageComponents: "getElements",
     }),
     screenConfig() {
-      const { width, height, fontSize, whUnit = "", fontUnit = "" } = this.screen;
+      const { width, height, sizeUnit = "px", fontSize, fontUnit } = this.screen;
       return {
-        // background: `linear-gradient(-90deg, ${this.gridColor} 1px, transparent 1px) 0% 0% / 20px 20px, linear-gradient(${this.gridColor} 1px, transparent 1px) 0% 0% / 20px 20px;`,
         ...this.screen,
-        width: width + whUnit,
-        height: height + whUnit,
+        width: width + sizeUnit,
+        height: height + sizeUnit,
         fontSize: fontSize + fontUnit,
         transform: `scale(${this.scale}) translate(-${((1 / this.scale - 1) / 2) * 100}%, -${
           ((1 / this.scale - 1) / 2) * 100
@@ -148,11 +115,10 @@ export default {
     },
 
     resizing({ x, y, w, h }, item) {
-      // console.log("resizing");
-      // item.posX = x;
-      // item.posY = y;
-      item.width = w;
-      item.height = h;
+      item.posX = x;
+      item.posY = y;
+      item.width = w - 2;
+      item.height = h - 2;
     },
     dragover(event) {
       // 阻止浏览器的默认事件
@@ -164,33 +130,63 @@ export default {
       // 获取组件拖动到舞台上的相对位置
       const { layerX, layerY } = event;
       const config = JSON.parse(data);
+      // console.log("config", config);
       const widget = {
         ...config,
-        posX: layerX / this.scale - (config.width || 0) / 2,
-        posY: layerY / this.scale - (config.height || 0) / 2,
+        posX: layerX / this.scale,
+        posY: layerY / this.scale,
       };
+      console.log("widget", widget);
       this.addElements(widget);
       event.preventDefault();
     },
 
     onActivated(widget) {
-      console.log("widget active", widget);
+      this.$emit("onActivated", widget);
     },
     onDeactivated(widget) {
-      console.log("widget onDeactivated", widget);
+      // console.log("widget onDeactivated", widget);
+      this.$emit("onActivated", null);
     },
-    onDrag(x, y) {
-      // console.log("drag--");
-      console.log("x, y", x, y);
+    onDrag(x, y, item) {
+      item.posX = x;
+      item.posY = y;
     },
-    onRotating(degree) {
-      console.log("onRotating: degree", degree);
+    onRotating(romate, item) {
+      item.romate = romate;
     },
 
     getRefLineParams(params) {
       const { vLine, hLine } = params;
       this.vLine = vLine;
       this.hLine = hLine;
+    },
+
+    transStyle(data) {
+      const fontSize = data.fontSize && data.fontSize + (data?.fontUnit || "px");
+      const borderWidth =
+        data.borderWidth &&
+        data.borderWidth.map(e => (e || 0) + (data?.borderUnit || "px")).join(" ");
+      const borderStyle = data.borderStyle && data.borderStyle.filter(e => !!e).join(" ");
+      const borderColor = data.borderColor && data.borderColor.filter(e => !!e).join(" ");
+      const borderRadius =
+        data.borderRadius &&
+        data.borderRadius.map(e => (e || 0) + (data?.borderRadiusUnit || "px")).join(" ");
+      const padding =
+        data.padding && data.padding.map(e => (e || 0) + (data?.paddingUnit || "px")).join(" ");
+      const width = data.width && data.width + (data.sizeUnit || "px");
+      const height = data.height && data.height + (data.sizeUnit || "px");
+      return {
+        ...data,
+        fontSize,
+        borderWidth,
+        borderStyle,
+        borderColor,
+        borderRadius,
+        padding,
+        width,
+        height,
+      };
     },
   },
 };

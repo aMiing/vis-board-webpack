@@ -62,9 +62,9 @@
           </el-checkbox>
         </template>
       </el-checkbox-group>
-      <p v-show="hasNoMatch" class="el-transfer-panel__empty">{{ t("el.transfer.noMatch") }}</p>
+      <p v-show="hasNoMatch" class="el-transfer-panel__empty">{{ t('el.transfer.noMatch') }}</p>
       <p v-show="data.length === 0 && !hasNoMatch" class="el-transfer-panel__empty">
-        {{ t("el.transfer.noData") }}
+        {{ t('el.transfer.noData') }}
       </p>
     </div>
     <p v-if="hasFooter" class="el-transfer-panel__footer">
@@ -74,12 +74,12 @@
 </template>
 
 <script>
-import Locale from "element-ui/lib/mixins/locale";
-import { RecycleScroller } from "vue-virtual-scroller";
-import "vue-virtual-scroller/dist/vue-virtual-scroller.css";
+import Locale from 'element-ui/lib/mixins/locale';
+import { RecycleScroller } from 'vue-virtual-scroller';
+import 'vue-virtual-scroller/dist/vue-virtual-scroller.css';
 
 export default {
-  name: "ElTransferPanel",
+  name: 'ElTransferPanel',
 
   components: {
     RecycleScroller,
@@ -89,7 +89,7 @@ export default {
       },
       render(h) {
         const getParent = vm => {
-          if (vm.$options.componentName === "ElTransferPanel") {
+          if (vm.$options.componentName === 'ElTransferPanel') {
             return vm;
           } else if (vm.$parent) {
             return getParent(vm.$parent);
@@ -111,7 +111,7 @@ export default {
   },
   mixins: [Locale],
 
-  componentName: "ElTransferPanel",
+  componentName: 'ElTransferPanel',
 
   props: {
     data: {
@@ -142,7 +142,7 @@ export default {
     return {
       checked: [],
       allChecked: false,
-      query: "",
+      query: '',
       inputHover: false,
       checkChangeByUser: true,
     };
@@ -151,7 +151,7 @@ export default {
   computed: {
     filteredData() {
       return this.data.filter(item => {
-        if (typeof this.filterMethod === "function") {
+        if (typeof this.filterMethod === 'function') {
           return this.filterMethod(this.query, item);
         } else {
           const label = item[this.labelProp] || item[this.keyProp].toString();
@@ -187,19 +187,19 @@ export default {
     },
 
     inputIcon() {
-      return this.query.length > 0 && this.inputHover ? "circle-close" : "search";
+      return this.query.length > 0 && this.inputHover ? 'circle-close' : 'search';
     },
 
     labelProp() {
-      return this.props.label || "label";
+      return this.props.label || 'label';
     },
 
     keyProp() {
-      return this.props.key || "key";
+      return this.props.key || 'key';
     },
 
     disabledProp() {
-      return this.props.disabled || "disabled";
+      return this.props.disabled || 'disabled';
     },
 
     hasFooter() {
@@ -219,9 +219,9 @@ export default {
         const movedKeys = val
           .concat(oldVal)
           .filter(v => val.indexOf(v) === -1 || oldVal.indexOf(v) === -1);
-        this.$emit("checked-change", val, movedKeys);
+        this.$emit('checked-change', val, movedKeys);
       } else {
-        this.$emit("checked-change", val);
+        this.$emit('checked-change', val);
         this.checkChangeByUser = true;
       }
     },
@@ -280,8 +280,8 @@ export default {
     },
 
     clearQuery() {
-      if (this.inputIcon === "circle-close") {
-        this.query = "";
+      if (this.inputIcon === 'circle-close') {
+        this.query = '';
       }
     },
   },

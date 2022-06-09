@@ -32,7 +32,7 @@ export default {
 
   computed: {
     items() {
-      const values = this.schema.values;
+      let values = this.schema.values;
       if (typeof values == 'function') {
         return values.apply(this, [this.model, this.schema]);
       } else {
@@ -91,14 +91,14 @@ export default {
       this.value = this.getItemValue(item);
     },
     isItemChecked(item) {
-      const currentValue = this.getItemValue(item);
+      let currentValue = this.getItemValue(item);
       return currentValue === this.value;
     },
     isItemDisabled(item) {
       if (this.disabled) {
         return true;
       }
-      const disabled = objGet(item, 'disabled', false);
+      let disabled = objGet(item, 'disabled', false);
       if (isFunction(disabled)) {
         return disabled(this.model);
       }

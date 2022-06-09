@@ -41,7 +41,8 @@
         :show-checkbox="showCheckbox"
         :render-content="renderContent"
         @node-expand="handleNodeExpand"
-      ></el-tree-node>
+      >
+      </el-tree-node>
     </template>
 
     <div
@@ -53,17 +54,17 @@
 </template>
 
 <script>
-import TreeStore from "./model/tree-store";
-import { getNodeKey, findNearestComponent } from "./model/util";
-import ElTreeNode from "./tree-node.vue";
-import { t } from "element-ui/lib/locale";
-import emitter from "element-ui/lib/mixins/emitter";
-import { addClass, removeClass } from "element-ui/lib/utils/dom";
-import { RecycleScroller } from "vue-virtual-scroller";
-import "vue-virtual-scroller/dist/vue-virtual-scroller.css";
+import TreeStore from './model/tree-store';
+import { getNodeKey, findNearestComponent } from './model/util';
+import ElTreeNode from './tree-node.vue';
+import { t } from 'element-ui/lib/locale';
+import emitter from 'element-ui/lib/mixins/emitter';
+import { addClass, removeClass } from 'element-ui/lib/utils/dom';
+import { RecycleScroller } from 'vue-virtual-scroller';
+import 'vue-virtual-scroller/dist/vue-virtual-scroller.css';
 
 export default {
-  name: "GTree",
+  name: 'GTree',
 
   components: {
     ElTreeNode,
@@ -87,7 +88,7 @@ export default {
     emptyText: {
       type: String,
       default() {
-        return t("el.tree.emptyText");
+        return t('el.tree.emptyText');
       },
     },
     renderAfterExpand: {
@@ -127,9 +128,9 @@ export default {
     props: {
       default() {
         return {
-          children: "children",
-          label: "label",
-          disabled: "disabled",
+          children: 'children',
+          label: 'label',
+          disabled: 'disabled',
         };
       },
     },
@@ -206,7 +207,7 @@ export default {
 
     checkboxItems(val) {
       Array.prototype.forEach.call(val, checkbox => {
-        checkbox.setAttribute("tabindex", -1);
+        checkbox.setAttribute('tabindex', -1);
       });
     },
 
@@ -237,16 +238,160 @@ export default {
     this.root = this.store.root;
 
     let dragState = this.dragState;
+    this.$on('tree-node-drag-start', (event, treeNode) => {
+      if (typeof this.allowDrag === 'function' && !this.allowDrag(treeNode.node)) {
+        event.preventDefault();
+        return false;
+      }
+      event.dataTransfer.effectAllowed = 'move';
+
+      // wrap in try catch to address IE's error when first param is 'text/plain'
+      try {
+        // setData is required for draggable to work in FireFox
+        // the content has to be '' so dragging a node out of the tree won't open a new tab in FireFox
+        event.dataTransfer.setData('text/plain', '');
+      } catch (e) {
+        //
+      }
+      dragState.draggingNode = treeNode;
+      this.$emit('node-drag-start', treeNode.node, event);
+    });
+
+    this.$on('tree-node-drag-over', (event, treeNode) => {
+      const dropNode = findNearestComponent(event.target, 'ElTreeNode');
+      const oldDropNode = dragState.dropNode;
+      if (oldDropNode && oldDropNode !== dropNode) {
+        removeClass(oldDropNode.$el, 'is-drop-inner');
+      }
+      const draggingNode = dragState.draggingNode;
+      if (!draggingNode || !dropNode) return;
+
+      let dropPrev = true;
+      let dropInner = true;
+      let dropNext = true;
+      let userAllowDropInner = true;
+      if (typeof this.allowDrop === 'function') {
+        dropPrev = this.allowDrop(draggingNode.node, dropNode.node, 'prev');
+        userAllowDropInner = dropInner = this.allowDrop(draggingNode.node, dropNode.node, 'inner');
+        dropNext = this.allowDrop(draggingNode.node, dropNode.node, 'next');
+      }
+      event.dataTransfer.dropEffect = dropInner ? 'move' : 'none';
+      if ((dropPrev || dropInner || dropNext) && oldDropNode !== dropNode) {
+        if (oldDropNode) {
+          this.$emit('node-drag-leave', draggingNode.node, oldDropNode.node, event);
+        }
+        this.$emit('node-drag-enter', draggingNode.node, dropNode.node, event);
+      }
+
+      if (dropPrev || dropInner || dropNext) {
+        dragState.dropNode = dropNode;
+      }
+
+      if (dropNode.node.nextSibling === draggingNode.node) {
+        dropNext = false;
+      }
+      if (dropNode.node.previousSibling === draggingNode.node) {
+        dropPrev = false;
+      }
+      if (dropNode.node.contains(draggingNode.node, false)) {
+        dropInner = false;
+      }
+      if (draggingNode.node === dropNode.node || draggingNode.node.contains(dropNode.node)) {
+        dropPrev = false;
+        dropInner = false;
+        dropNext = false;
+      }
+
+      const targetPosition = dropNode.$el.getBoundingClientRect();
+      const treePosition = this.$el.getBoundingClientRect();
+
+      let dropType;
+      const prevPercent = dropPrev ? (dropInner ? 0.25 : dropNext ? 0.45 : 1) : -1;
+      const nextPercent = dropNext ? (dropInner ? 0.75 : dropPrev ? 0.55 : 0) : 1;
+
+      let indicatorTop = -9999;
+      const distance = event.clientY - targetPosition.top;
+      if (distance < targetPosition.height * prevPercent) {
+        dropType = 'before';
+      } else if (distance > targetPosition.height * nextPercent) {
+        dropType = 'after';
+      } else if (dropInner) {
+        dropType = 'inner';
+      } else {
+        dropType = 'none';
+      }
+
+      const iconPosition = dropNode.$el
+        .querySelector('.el-tree-node__expand-icon')
+        .getBoundingClientRect();
+      const dropIndicator = this.$refs.dropIndicator;
+      if (dropType === 'before') {
+        indicatorTop = iconPosition.top - treePosition.top;
+      } else if (dropType === 'after') {
+        indicatorTop = iconPosition.bottom - treePosition.top;
+      }
+      dropIndicator.style.top = indicatorTop + 'px';
+      dropIndicator.style.left = iconPosition.right - treePosition.left + 'px';
+
+      if (dropType === 'inner') {
+        addClass(dropNode.$el, 'is-drop-inner');
+      } else {
+        removeClass(dropNode.$el, 'is-drop-inner');
+      }
+
+      dragState.showDropIndicator = dropType === 'before' || dropType === 'after';
+      dragState.allowDrop = dragState.showDropIndicator || userAllowDropInner;
+      dragState.dropType = dropType;
+      this.$emit('node-drag-over', draggingNode.node, dropNode.node, event);
+    });
+
+    this.$on('tree-node-drag-end', event => {
+      const { draggingNode, dropType, dropNode } = dragState;
+      event.preventDefault();
+      event.dataTransfer.dropEffect = 'move';
+
+      if (draggingNode && dropNode) {
+        const draggingNodeCopy = { data: draggingNode.node.data };
+        if (dropType !== 'none') {
+          draggingNode.node.remove();
+        }
+        if (dropType === 'before') {
+          dropNode.node.parent.insertBefore(draggingNodeCopy, dropNode.node);
+        } else if (dropType === 'after') {
+          dropNode.node.parent.insertAfter(draggingNodeCopy, dropNode.node);
+        } else if (dropType === 'inner') {
+          dropNode.node.insertChild(draggingNodeCopy);
+        }
+        if (dropType !== 'none') {
+          this.store.registerNode(draggingNodeCopy);
+        }
+
+        removeClass(dropNode.$el, 'is-drop-inner');
+
+        this.$emit('node-drag-end', draggingNode.node, dropNode.node, dropType, event);
+        if (dropType !== 'none') {
+          this.$emit('node-drop', draggingNode.node, dropNode.node, dropType, event);
+        }
+      }
+      if (draggingNode && !dropNode) {
+        this.$emit('node-drag-end', draggingNode.node, null, dropType, event);
+      }
+
+      dragState.showDropIndicator = false;
+      dragState.draggingNode = null;
+      dragState.dropNode = null;
+      dragState.allowDrop = true;
+    });
   },
 
   mounted() {
     this.initTabIndex();
-    this.$el.addEventListener("keydown", this.handleKeydown);
+    this.$el.addEventListener('keydown', this.handleKeydown);
   },
 
   updated() {
-    this.treeItems = this.$el.querySelectorAll("[role=treeitem]");
-    this.checkboxItems = this.$el.querySelectorAll("input[type=checkbox]");
+    this.treeItems = this.$el.querySelectorAll('[role=treeitem]');
+    this.checkboxItems = this.$el.querySelectorAll('input[type=checkbox]');
   },
 
   methods: {
@@ -263,7 +408,7 @@ export default {
 
     filter(value) {
       if (!this.filterNodeMethod)
-        throw new Error("[Tree] filterNodeMethod is required when filter");
+        throw new Error('[Tree] filterNodeMethod is required when filter');
       this.store.filter(value);
     },
 
@@ -272,7 +417,7 @@ export default {
     },
 
     getNodePath(data) {
-      if (!this.nodeKey) throw new Error("[Tree] nodeKey is required in getNodePath");
+      if (!this.nodeKey) throw new Error('[Tree] nodeKey is required in getNodePath');
       const node = this.store.getNode(data);
       if (!node) return [];
       const path = [node.data];
@@ -298,18 +443,18 @@ export default {
     },
 
     getCurrentKey() {
-      if (!this.nodeKey) throw new Error("[Tree] nodeKey is required in getCurrentKey");
+      if (!this.nodeKey) throw new Error('[Tree] nodeKey is required in getCurrentKey');
       const currentNode = this.getCurrentNode();
       return currentNode ? currentNode[this.nodeKey] : null;
     },
 
     setCheckedNodes(nodes, leafOnly) {
-      if (!this.nodeKey) throw new Error("[Tree] nodeKey is required in setCheckedNodes");
+      if (!this.nodeKey) throw new Error('[Tree] nodeKey is required in setCheckedNodes');
       this.store.setCheckedNodes(nodes, leafOnly);
     },
 
     setCheckedKeys(keys, leafOnly) {
-      if (!this.nodeKey) throw new Error("[Tree] nodeKey is required in setCheckedKeys");
+      if (!this.nodeKey) throw new Error('[Tree] nodeKey is required in setCheckedKeys');
       this.store.setCheckedKeys(keys, leafOnly);
     },
 
@@ -326,12 +471,12 @@ export default {
     },
 
     setCurrentNode(node) {
-      if (!this.nodeKey) throw new Error("[Tree] nodeKey is required in setCurrentNode");
+      if (!this.nodeKey) throw new Error('[Tree] nodeKey is required in setCurrentNode');
       this.store.setUserCurrentNode(node);
     },
 
     setCurrentKey(key) {
-      if (!this.nodeKey) throw new Error("[Tree] nodeKey is required in setCurrentKey");
+      if (!this.nodeKey) throw new Error('[Tree] nodeKey is required in setCurrentKey');
       this.store.setCurrentNodeKey(key);
     },
 
@@ -356,31 +501,31 @@ export default {
     },
 
     handleNodeExpand(nodeData, node, instance) {
-      this.broadcast("ElTreeNode", "tree-node-expand", node);
-      this.$emit("node-expand", nodeData, node, instance);
+      this.broadcast('ElTreeNode', 'tree-node-expand', node);
+      this.$emit('node-expand', nodeData, node, instance);
     },
 
     updateKeyChildren(key, data) {
-      if (!this.nodeKey) throw new Error("[Tree] nodeKey is required in updateKeyChild");
+      if (!this.nodeKey) throw new Error('[Tree] nodeKey is required in updateKeyChild');
       this.store.updateChildren(key, data);
     },
 
     initTabIndex() {
-      this.treeItems = this.$el.querySelectorAll(".is-focusable[role=treeitem]");
-      this.checkboxItems = this.$el.querySelectorAll("input[type=checkbox]");
-      const checkedItem = this.$el.querySelectorAll(".is-checked[role=treeitem]");
+      this.treeItems = this.$el.querySelectorAll('.is-focusable[role=treeitem]');
+      this.checkboxItems = this.$el.querySelectorAll('input[type=checkbox]');
+      const checkedItem = this.$el.querySelectorAll('.is-checked[role=treeitem]');
       if (checkedItem.length) {
-        checkedItem[0].setAttribute("tabindex", 0);
+        checkedItem[0].setAttribute('tabindex', 0);
         return;
       }
-      this.treeItems[0] && this.treeItems[0].setAttribute("tabindex", 0);
+      this.treeItems[0] && this.treeItems[0].setAttribute('tabindex', 0);
     },
 
     handleKeydown(ev) {
       const currentItem = ev.target;
-      if (currentItem.className.indexOf("el-tree-node") === -1) return;
+      if (currentItem.className.indexOf('el-tree-node') === -1) return;
       const keyCode = ev.keyCode;
-      this.treeItems = this.$el.querySelectorAll(".is-focusable[role=treeitem]");
+      this.treeItems = this.$el.querySelectorAll('.is-focusable[role=treeitem]');
       const currentIndex = this.treeItemArray.indexOf(currentItem);
       let nextIndex;
       if ([38, 40].indexOf(keyCode) > -1) {

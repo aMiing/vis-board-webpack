@@ -140,8 +140,8 @@ export default {
       return value;
     },
     formatDatetimeToModel(newValue, oldValue) {
-      const defaultFormat = DATETIME_FORMATS[this.schema.inputType.toLowerCase()];
-      const m = fecha.parse(newValue, defaultFormat);
+      let defaultFormat = DATETIME_FORMATS[this.schema.inputType.toLowerCase()];
+      let m = fecha.parse(newValue, defaultFormat);
       if (m !== false) {
         if (this.schema.format) {
           newValue = fecha.format(m, this.schema.format);
@@ -156,7 +156,7 @@ export default {
         return null;
       }
 
-      const defaultFormat = DATETIME_FORMATS[this.schema.inputType.toLowerCase()];
+      let defaultFormat = DATETIME_FORMATS[this.schema.inputType.toLowerCase()];
       let m = value;
       if (!isNumber(value)) {
         m = fecha.parse(value, defaultFormat);

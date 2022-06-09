@@ -12,7 +12,7 @@ import { slugifyFormID } from '../utils/schema';
 
 function attributesDirective(el, binding, vnode) {
   let attrs = objGet(vnode.context, 'schema.attributes', {});
-  const container = binding.value || 'input';
+  let container = binding.value || 'input';
   if (isString(container)) {
     attrs = objGet(attrs, container) || attrs;
   }
@@ -55,7 +55,7 @@ export default {
       },
 
       set(newValue) {
-        const oldValue = this.value;
+        let oldValue = this.value;
         newValue = this.formatValueToModel(newValue);
 
         if (isFunction(newValue)) {
@@ -80,7 +80,7 @@ export default {
     },
     validate(calledParent) {
       this.clearValidationErrors();
-      const validateAsync = objGet(this.formOptions, 'validateAsync', false);
+      let validateAsync = objGet(this.formOptions, 'validateAsync', false);
 
       let results = [];
 
@@ -98,13 +98,13 @@ export default {
           if (validateAsync) {
             results.push(validator(this.value, this.schema, this.model));
           } else {
-            const result = validator(this.value, this.schema, this.model);
+            let result = validator(this.value, this.schema, this.model);
             if (result && isFunction(result.then)) {
               result.then(err => {
                 if (err) {
                   this.errors = this.errors.concat(err);
                 }
-                const isValid = this.errors.length === 0;
+                let isValid = this.errors.length === 0;
                 this.$emit('validated', isValid, this.errors, this);
               });
             } else if (result) {
@@ -114,7 +114,7 @@ export default {
         });
       }
 
-      const handleErrors = errors => {
+      let handleErrors = errors => {
         let fieldErrors = [];
         forEach(arrayUniq(errors), err => {
           if (isArray(err) && err.length > 0) {
@@ -127,7 +127,7 @@ export default {
           this.schema.onValidated.call(this, this.model, fieldErrors, this.schema);
         }
 
-        const isValid = fieldErrors.length === 0;
+        let isValid = fieldErrors.length === 0;
         if (!calledParent) {
           this.$emit('validated', isValid, fieldErrors, this);
         }
@@ -205,7 +205,7 @@ export default {
       let i = 0;
       const n = a.length;
       while (i < n) {
-        const k = a[i];
+        let k = a[i];
         if (i < n - 1)
           if (o[k] !== undefined) {
             // Found parent property. Step in

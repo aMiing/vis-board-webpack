@@ -9,18 +9,18 @@
 </template>
 
 <script>
-import Popper from "element-ui/lib/utils/vue-popper";
+import Popper from 'element-ui/lib/utils/vue-popper';
 
 export default {
-  name: "ElSelectDropdown",
+  name: 'ElSelectDropdown',
 
-  componentName: "ElSelectDropdown",
+  componentName: 'ElSelectDropdown',
 
   mixins: [Popper],
 
   props: {
     placement: {
-      default: "bottom-start",
+      default: 'bottom-start',
     },
 
     boundariesPadding: {
@@ -47,7 +47,7 @@ export default {
 
   data() {
     return {
-      minWidth: "",
+      minWidth: '',
     };
   },
 
@@ -58,14 +58,18 @@ export default {
   },
 
   watch: {
-    "$parent.inputWidth"() {
-      this.minWidth = this.$parent.$el.getBoundingClientRect().width + "px";
+    '$parent.inputWidth'() {
+      this.minWidth = this.$parent.$el.getBoundingClientRect().width + 'px';
     },
   },
 
   mounted() {
     this.referenceElm = this.$parent.$refs.reference.$el;
     this.$parent.popperElm = this.popperElm = this.$el;
+    this.$on('updatePopper', () => {
+      if (this.$parent.visible) this.updatePopper();
+    });
+    this.$on('destroyPopper', this.destroyPopper);
   },
 };
 </script>

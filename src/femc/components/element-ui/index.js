@@ -10,3 +10,4 @@ export * from './badge';
 export * from './message-box';
 export * from './page-header';
 export * from './transfer';
+export * from './upload';

@@ -24,16 +24,16 @@
 </template>
 
 <script>
-import Ladder from "./ladder.vue";
-import debounce from "lodash/debounce";
+import Ladder from './ladder.vue';
+import debounce from 'lodash/debounce';
 
 export default {
-  name: "GDragBox",
+  name: 'GDragBox',
   components: { Ladder },
   props: {
     placement: {
       type: String,
-      default: "right",
+      default: 'right',
     },
     collapseButton: {
       type: Boolean,
@@ -75,14 +75,14 @@ export default {
   },
   computed: {
     isHorizontal() {
-      return ["left", "right"].includes(this.placement);
+      return ['left', 'right'].includes(this.placement);
     },
     boxStyle() {
       const { isHorizontal, size, collapse, collapse2min, min } = this;
       const minSpan = collapse2min ? min : 0;
       let computedSpan = collapse ? minSpan : size.span;
-      computedSpan += "px";
-      const [width, height] = isHorizontal ? [computedSpan, "100%"] : ["100%", computedSpan];
+      computedSpan += 'px';
+      const [width, height] = isHorizontal ? [computedSpan, '100%'] : ['100%', computedSpan];
       return { width, height };
     },
     iconStyle() {
@@ -95,7 +95,7 @@ export default {
       };
 
       const transform = strategy[placement] || strategy.right;
-      return { transform, [placement]: iconOffset + "px" };
+      return { transform, [placement]: iconOffset + 'px' };
     },
     hover() {
       if (!this.drag) return false;
@@ -105,9 +105,9 @@ export default {
   },
   watch: {
     collapse(val) {
-      this.$emit("collapse", val);
+      this.$emit('collapse', val);
     },
-    "size.span": {
+    'size.span': {
       immediate: true,
       handler() {
         if (!this.collapse2min) return;
@@ -120,9 +120,9 @@ export default {
     this.setSize();
     const handleResize = debounce(this.setSize, 300);
 
-    window.addEventListener("resize", handleResize);
-    this.$once("hook:beforeDestroy", () => {
-      window.removeEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
+    this.$once('hook:beforeDestroy', () => {
+      window.removeEventListener('resize', handleResize);
     });
   },
   methods: {
@@ -149,9 +149,9 @@ export default {
       this.iconOffset = this.collapse ? -12 : 0;
 
       if (this.collapse2min && !this.collapse && this.size.span <= this.size.min) {
-        const direction = this.isHorizontal ? "width" : "height";
+        const direction = this.isHorizontal ? 'width' : 'height';
         this.size.span = this.size.max;
-        this.$el.style[direction] = this.size.span + "px";
+        this.$el.style[direction] = this.size.span + 'px';
       }
     },
     handleMousedown(e) {
@@ -175,35 +175,35 @@ export default {
         let span = getSpan(e);
         span = span > this.size.max ? this.size.max : span;
         span = span < this.size.min ? this.size.min : span;
-        const direction = this.isHorizontal ? "width" : "height";
+        const direction = this.isHorizontal ? 'width' : 'height';
         this.size.span = span;
-        dragBox.style[direction] = this.size.span + "px";
+        dragBox.style[direction] = this.size.span + 'px';
       };
 
       const mouseup = e => {
-        document.removeEventListener("mousemove", mousemove);
-        document.removeEventListener("mouseup", mouseup);
+        document.removeEventListener('mousemove', mousemove);
+        document.removeEventListener('mouseup', mouseup);
         const typeofSticky = typeof this.sticky;
 
-        if (typeofSticky === "number" || (typeofSticky === "boolean" && this.sticky)) {
+        if (typeofSticky === 'number' || (typeofSticky === 'boolean' && this.sticky)) {
           const span = getSpan(e);
-          const stickySpan = typeofSticky === "number" ? this.sticky : 30;
+          const stickySpan = typeofSticky === 'number' ? this.sticky : 30;
           if (span - this.size.min < stickySpan) {
             this.size.span = this.size.min;
-            const direction = this.isHorizontal ? "width" : "height";
-            dragBox.style[direction] = this.size.span + "px";
+            const direction = this.isHorizontal ? 'width' : 'height';
+            dragBox.style[direction] = this.size.span + 'px';
           }
         }
 
         this.dispatchResize();
       };
-      document.addEventListener("mousemove", mousemove);
-      document.addEventListener("mouseup", mouseup);
+      document.addEventListener('mousemove', mousemove);
+      document.addEventListener('mouseup', mouseup);
     },
     transRaw2Pixel(raw) {
       const rawStr = String(raw);
       // 百分比
-      if (rawStr.endsWith("%")) {
+      if (rawStr.endsWith('%')) {
         const { width, height } = this.$el.parentNode.getBoundingClientRect();
         const percent = rawStr.slice(0, -1);
         const span = this.isHorizontal ? width : height;
@@ -211,12 +211,12 @@ export default {
       }
 
       // 以px结尾去除px
-      if (rawStr.endsWith("px")) return Number(rawStr.slice(0, -2));
+      if (rawStr.endsWith('px')) return Number(rawStr.slice(0, -2));
       return Number(rawStr);
     },
     dispatchResize() {
       this.triggerBySelf = true;
-      window.dispatchEvent(new Event("resize"));
+      window.dispatchEvent(new Event('resize'));
     },
     async handleTransitionend() {
       this.animate = false;
@@ -292,7 +292,6 @@ $iconHeight: 80px;
       width: $iconWidth;
       height: $iconHeight;
       top: 50%;
-      z-index: 999;
     }
   }
 
@@ -311,7 +310,6 @@ $iconHeight: 80px;
       width: $iconHeight;
       height: $iconWidth;
       left: 50%;
-      z-index: 999;
     }
   }
 

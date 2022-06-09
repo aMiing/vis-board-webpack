@@ -39,7 +39,7 @@ export default {
     },
 
     items() {
-      const values = this.schema.values;
+      let values = this.schema.values;
       if (typeof values == 'function') {
         return this.groupValues(values.apply(this, [this.model, this.schema]));
       } else return this.groupValues(values);
@@ -55,7 +55,7 @@ export default {
     },
 
     groupValues(values) {
-      const array = [];
+      let array = [];
       let arrayElement = {};
 
       values.forEach(item => {
