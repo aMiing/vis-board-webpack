@@ -24,12 +24,6 @@ const ScreenConfig = {
       fontFamily: "",
     },
   },
-  zoom: {
-    label: "缩放",
-    props: {
-      scale: 1,
-    },
-  },
   gride: {
     label: "网格",
     props: {

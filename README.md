@@ -36,6 +36,7 @@ npm run lint
 
 - 配置数据和记录数据分开
 - screenData && screenConfig
+- scale 缩放数据不应该作为屏幕数据被存储，会污染属性， scale 的生命周期仅存在于当前次的编辑。
 
 ## bug 记录
 

@@ -4,7 +4,7 @@
     <div class="left-config__panel">
       <g-drag-box
         placement="right"
-        span="320"
+        span="0"
         min="0"
         max="400"
         collapse-button
@@ -33,7 +33,7 @@
           <div class="scale-label">缩放比例</div>
           <div class="scale-slider-wrap">
             <el-slider
-              v-model="screen.scale"
+              v-model="scale"
               :max="1"
               :min="0"
               :step="0.01"
@@ -42,7 +42,7 @@
               @change="handleScaleChange"
             ></el-slider>
           </div>
-          <div class="scale-value">{{ screen.scale.toFixed(2) }}</div>
+          <div class="scale-value">{{ scale.toFixed(2) }}</div>
         </div>
       </div>
     </div>
@@ -118,11 +118,9 @@ export default {
         const { width: parentWidth, height: parentHeight } =
           this.$refs["screen-content__wrap"].getBoundingClientRect();
         const { width, height } = this.screen;
-        const scale = Math.min(parentWidth / width, parentWidth / height);
-        this.screen.scale = Number(scale.toFixed(2));
-        this.$refs["main-screen"]?.updateScale(scale);
-        console.log("scale", scale);
-        this.updateParentStyle(scale);
+        this.scale = Math.min(parentWidth / width, parentWidth / height);
+        this.$refs["main-screen"]?.updateScale(this.scale);
+        this.updateParentStyle(this.scale);
       }, 300)();
     },
     handleScaleChange(val) {
