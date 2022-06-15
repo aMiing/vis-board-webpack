@@ -87,7 +87,6 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("panel", ["getElements"]),
     widgets() {
       return this.widgetTabs.map(e => e.widgets);
     },
@@ -104,7 +103,6 @@ export default {
       };
       console.log("_widget", _widget);
       await this.addElements(_widget);
-      console.log(this.getElements);
     },
   },
 };

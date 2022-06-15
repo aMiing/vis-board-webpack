@@ -1,23 +1,21 @@
 <template>
-  <!-- 操作面板 -->
-
   <div
     class="screen"
     ref="screen"
     :style="screenConfig"
-    @click="loadSetting('screen')"
+    @click="switchSettingType()"
     @dragover="dragover"
     @drop="drop"
   >
     <vue-drag-resize-rotate
-      v-for="item in pageComponents"
+      v-for="item in elements"
       class-name="drag-box"
       :key="item.id"
       :parent="true"
       :grid="[20, 20]"
       :rotatable="true"
-      :w="item.width + 2"
-      :h="item.height + 2"
+      :w="item.width"
+      :h="item.height"
       :x="item.posX"
       :y="item.posY"
       :r="item.romate"
@@ -27,14 +25,14 @@
       :lock-aspect-ratio="lockRatio"
       :snap="true"
       :snapTolerance="15"
-      @resizing="(x, y, w, h) => resizing({ x, y, w, h }, item)"
       @activated="onActivated(item)"
       @deactivated="onDeactivated(item)"
-      @dragging="(x, y) => onDrag(x, y, item)"
-      @rotating="romate => onRotating(romate, item)"
+      @resizestop="(x, y, w, h) => resizestop({ x, y, w, h }, item)"
+      @dragstop="(x, y) => onDrag(x, y, item)"
+      @rotatestop="romate => onRotating(romate, item)"
       @refLineParams="getRefLineParams"
     >
-      <div class="component-event" @click.stop="loadSetting('widget', item.id)">
+      <div class="component-event" @click.stop="switchSettingType(item)">
         <component :is="item.name" :data="transStyle(item)"></component>
       </div>
     </vue-drag-resize-rotate>
@@ -61,6 +59,7 @@
 <script>
 import VueDragResizeRotate from "@gausszhou/vue-drag-resize-rotate";
 import modules from "@/components/widgets/index.js";
+import { cloneDeep } from "lodash";
 
 import { mapGetters, mapActions } from "vuex";
 export default {
@@ -69,6 +68,10 @@ export default {
     screen: {
       type: Object,
       default: () => ({}),
+    },
+    elements: {
+      type: Array,
+      default: () => [],
     },
   },
   components: {
@@ -87,9 +90,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("panel", {
-      pageComponents: "getElements",
-    }),
+    ...mapGetters("history", ["isLastHistory"]),
     screenConfig() {
       const { width, height, sizeUnit = "px", fontSize, fontUnit } = this.screen;
       return {
@@ -105,20 +106,28 @@ export default {
     },
   },
   methods: {
-    ...mapActions("panel", ["addElements"]),
+    ...mapActions("panel", [
+      "addElements",
+      "recordElementsChange",
+      "recordScreenChange",
+      "postPropsChange",
+    ]),
+    getBoxSize(value) {
+      return value + 2;
+    },
     updateScale(scale) {
       this.scale = scale;
     },
 
-    loadSetting(type, id = "") {
-      this.$emit("updateActive", { type, id });
+    switchSettingType(widget) {
+      this.$emit("onActivated", widget);
     },
 
-    resizing({ x, y, w, h }, item) {
+    resizestop({ x, y, w, h }, item) {
       item.posX = x;
       item.posY = y;
-      item.width = w - 2;
-      item.height = h - 2;
+      item.width = w;
+      item.height = h;
     },
     dragover(event) {
       // 阻止浏览器的默认事件
@@ -130,23 +139,21 @@ export default {
       // 获取组件拖动到舞台上的相对位置
       const { layerX, layerY } = event;
       const config = JSON.parse(data);
-      // console.log("config", config);
       const widget = {
         ...config,
         posX: layerX / this.scale,
         posY: layerY / this.scale,
       };
-      console.log("widget", widget);
       this.addElements(widget);
       event.preventDefault();
     },
 
     onActivated(widget) {
-      this.$emit("onActivated", widget);
+      // this.$emit("onActivated", widget);
     },
     onDeactivated(widget) {
       // console.log("widget onDeactivated", widget);
-      this.$emit("onActivated", null);
+      // this.$emit("onActivated", null);
     },
     onDrag(x, y, item) {
       item.posX = x;

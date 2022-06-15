@@ -38,9 +38,6 @@ export default {
       widgetGroup,
     };
   },
-  computed: {
-    ...mapGetters("panel", ["getElements"]),
-  },
   methods: {
     ...mapActions("panel", ["addElements"]),
     getRandomId() {
@@ -56,8 +53,10 @@ export default {
       const initConfig = Object.keys(target).reduce((total, e) => {
         return Object.assign(total, { ...(target[e]?.props || {}) });
       }, {});
+      const { name, label } = widget;
       return {
-        ...widget,
+        name,
+        label,
         ...initConfig,
         id: this.getRandomId(),
       };

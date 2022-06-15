@@ -22,7 +22,7 @@
 </template>
 <script>
 import operatorGroup from "@/components/operator-group/index.vue";
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
 export default {
   name: "HeaderBar",
   components: { operatorGroup },
@@ -32,17 +32,29 @@ export default {
         {
           name: "保存",
           iconClass: "icon-baocun",
-          click: row => this.save(row),
+          click: () => this.save(),
+          disabled: {
+            cb: () => this.noNeedBeSave,
+            tips: "无变更需要保存",
+          },
         },
         {
           name: "上一步",
           iconClass: "icon-houtui-shi",
-          click: row => console.log(row),
+          click: () => this.undo(),
+          disabled: {
+            cb: () => !this.currentHistoryIndex,
+            tips: "没有上一步了~",
+          },
         },
         {
           name: "下一步",
           iconClass: "icon-qianjin-shi",
-          click: row => console.log(row),
+          click: () => this.redo(),
+          disabled: {
+            cb: () => this.currentHistoryIndex >= this.historyLength - 1,
+            tips: "已经是最后一步了",
+          },
         },
         {
           name: "发布",
@@ -63,6 +75,18 @@ export default {
   },
   computed: {
     ...mapGetters("user", ["getUserInfo"]),
+    ...mapGetters("panel", {
+      screen: "screenData",
+      changed: "changed",
+    }),
+    ...mapGetters("history", [
+      "isLastHistory",
+      "isFirstHistory",
+      "noHistory",
+      "noNeedBeSave",
+      "currentHistoryIndex",
+      "historyLength",
+    ]),
     isEdit() {
       return this.$route?.name === "edit";
     },
@@ -72,6 +96,7 @@ export default {
   },
   methods: {
     ...mapActions("panel", ["saveData"]),
+    ...mapActions("history", { undo: "undo", redo: "redo" }),
     //退出登录
     logout: function () {
       this.$confirm("确认退出吗?", "提示", {
@@ -96,8 +121,7 @@ export default {
   height: 36px;
   line-height: 36px;
   z-index: 99;
-  background: linear-gradient(-234deg, #35416a, #6576a3);
-
+  background: var(--grey-8);
   color: #fff;
   display: flex;
   justify-content: space-between;

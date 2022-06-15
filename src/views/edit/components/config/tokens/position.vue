@@ -6,7 +6,7 @@
           <div class="flex-box">
             <el-input-number
               v-model="data.posX"
-              :step="screenData.gride || 5"
+              :step="data.gride || 5"
               :min="0"
               :max="1920"
             ></el-input-number>
@@ -15,7 +15,7 @@
           <div class="flex-box">
             <el-input-number
               v-model="data.posY"
-              :step="screenData.gride || 5"
+              :step="data.gride || 5"
               :min="0"
               :max="1080"
             ></el-input-number>

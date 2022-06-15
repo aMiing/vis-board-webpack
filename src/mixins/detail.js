@@ -1,43 +1,22 @@
-import { mapActions, mapMutations } from "vuex";
+import { mapActions, mapMutations, mapGetters } from "vuex";
 export default {
   data() {
-    return {
-      panels: [],
-    };
+    return {};
   },
   computed: {
-    id() {
-      return this.$route?.query?.id;
-    },
-    screen() {
-      const target = this.panels.find(e => e.id === this.id);
-      this.updateData(target);
-      return target;
-    },
+    ...mapGetters("panel", { screen: "screenData", elements: "getElements" }),
   },
-  created() {
-    this.getPanelList();
-  },
-  mounted() {
-    this.recordView();
+  async mounted() {
+    // 更新id
+    const id = this.$route?.query?.id;
+    this.updateId(id);
+    await this.fetchScreenData();
+    await this.fetchElements();
+    this.startRecordHistory();
   },
   methods: {
-    ...mapMutations("panel", ["setData"]),
-    updateData(data) {
-      // const panelListStr = JSON.stringify(this.panels);
-      // //   存储或更新localstorage
-      // window.sessionStorage.setItem("panelListStr", panelListStr);
-      this.setData(data);
-    },
-    getPanelList() {
-      //   获取panelList
-      const list = window.sessionStorage.getItem("panelListStr") || "[]";
-      this.panels = JSON.parse(list);
-    },
-    recordView() {
-      console.log("this.screen", this.screen);
-      this.screen.viewCount++;
-      this.updateData({ id: this.id, viewCount: this.screen.viewCount });
-    },
+    ...mapMutations("history", ["startRecordHistory"]),
+    ...mapMutations("panel", ["updateId"]),
+    ...mapActions("panel", ["useScreen", "fetchScreenData", "fetchElements"]),
   },
 };

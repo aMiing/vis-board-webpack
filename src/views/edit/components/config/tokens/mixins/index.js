@@ -9,8 +9,8 @@ export default {
   data() {
     return {};
   },
-  computed: {
-    ...mapGetters("panel", ["screenData"]),
+  mounted() {
+    // console.log("this.data", this.data);
   },
   methods: {},
 };

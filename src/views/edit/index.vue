@@ -23,6 +23,7 @@
             <mainScreen
               ref="main-screen"
               :screen="screen"
+              :elements="elements"
               @updateParentStyle="updateParentStyle"
               @onActivated="onWidgetActivated"
             />
@@ -75,7 +76,7 @@ import materialList from "./components/material";
 import mainScreen from "./components/main-screen";
 import detailMix from "@/mixins/detail";
 import { mapActions, mapMutations } from "vuex";
-import { debounce } from "lodash";
+import { debounce, cloneDeep } from "lodash";
 
 export default {
   name: "EditPage",
@@ -88,18 +89,39 @@ export default {
   mixins: [detailMix],
   data() {
     return {
-      layerCollapse: false,
-      configCollapse: false,
-      ScreenBgColor: "rgb(36,43,41)",
       currentType: "screen",
       contentStyle: { width: "unset", height: "unset" },
       scale: 1,
       activatedEl: null, //当前激活的组件
       clickTarget: "screen",
+      propsData: {},
     };
   },
+  computed: {
+    pageComponents() {
+      return cloneDeep(this.elements);
+    },
+    screenData() {
+      return cloneDeep(this.screen);
+    },
+  },
+
+  watch: {
+    pageComponents: {
+      handler(newV, oldV) {
+        this.isLastHistory && this.recordElementsChange({ oldV, newV });
+      },
+      deep: true,
+    },
+    screenData: {
+      handler(newV, oldV) {
+        this.recordScreenChange({ oldV, newV });
+      },
+      deep: true,
+    },
+  },
   created() {
-    this.setPanelId(this.id);
+    this.propsData = cloneDeep(this.screen);
   },
   mounted() {
     this.$nextTick(() => {
@@ -107,7 +129,7 @@ export default {
     });
   },
   methods: {
-    ...mapMutations("panel", ["setPanelId"]),
+    ...mapActions("panel", ["postPropsChange", "recordScreenChange"]),
     updateParentStyle(scale) {
       const { width, height, sizeUnit } = this.screen;
       this.contentStyle["width"] = width * scale + sizeUnit;
