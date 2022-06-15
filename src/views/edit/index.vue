@@ -109,13 +109,13 @@ export default {
   watch: {
     pageComponents: {
       handler(newV, oldV) {
-        this.isLastHistory && this.recordElementsChange({ oldV, newV });
+        this.recordDataChange({ oldV, newV, type: "elements" });
       },
       deep: true,
     },
     screenData: {
       handler(newV, oldV) {
-        this.recordScreenChange({ oldV, newV });
+        this.recordDataChange({ oldV, newV, type: "screen" });
       },
       deep: true,
     },
@@ -129,7 +129,7 @@ export default {
     });
   },
   methods: {
-    ...mapActions("panel", ["postPropsChange", "recordScreenChange"]),
+    ...mapActions("panel", ["recordDataChange"]),
     updateParentStyle(scale) {
       const { width, height, sizeUnit } = this.screen;
       this.contentStyle["width"] = width * scale + sizeUnit;
