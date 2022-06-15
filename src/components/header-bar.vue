@@ -108,8 +108,9 @@ export default {
         })
         .catch(() => {});
     },
-    save(row) {
-      this.saveData();
+    async save() {
+      await this.saveData();
+      this.$message.success("保存成功！");
     },
   },
 };

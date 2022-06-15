@@ -106,12 +106,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions("panel", [
-      "addElements",
-      "recordElementsChange",
-      "recordScreenChange",
-      "postPropsChange",
-    ]),
+    ...mapActions("panel", ["addElements"]),
     getBoxSize(value) {
       return value + 2;
     },

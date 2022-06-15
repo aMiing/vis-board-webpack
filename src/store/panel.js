@@ -38,12 +38,22 @@ const mutations = {
     Object.assign(state.screen, { ...value });
   },
 
-  setElements(state, value) {
+  pushElements(state, value) {
     state.elements.push(...value);
+  },
+  insertElement(state, { index, element }) {
+    state.elements.splice(index, 0, ...element);
+  },
+  popElement(state, index = -1) {
+    console.log("~index", ~index);
+    ~index ? state.elements.splice(index, 1) : state.elements.pop();
   },
   updateScreenProp(state, value) {
     const { key, val } = value;
     state.screen[key] = val;
+  },
+  updateElementProp(state, { index, key, val }) {
+    state.elements[index][key] = val;
   },
 };
 const actions = {
@@ -51,28 +61,20 @@ const actions = {
   postPropsChange({ commit, dispatch, state }, value) {
     console.log("postPropsChange ---- value", value);
   },
-
-  recordElementsChange({ commit, dispatch, state }, value) {
-    const { oldV, newV } = value;
-    // 更新screen
-    const diff = diff(oldV, newV);
-    dispatch("history/addHistory", { type: "elements", id: UUID(), diff }, { root: true });
-  },
-  recordScreenChange({ commit, dispatch, state }, value) {
-    const { oldV, newV } = value;
-    dispatch(
-      "history/addHistory",
-      { type: "screen", id: UUID(), diff: diff(oldV, newV) },
-      { root: true }
-    );
+  recordDataChange({ dispatch }, value) {
+    const { oldV, newV, type } = value;
+    const _diff = diff(oldV, newV);
+    _diff && dispatch("history/addHistory", { type, id: UUID(), diff: _diff }, { root: true });
   },
   // 模拟向后台提交
   saveData({ commit, state }) {
     window.sessionStorage.setItem("elements_" + state.screenId, JSON.stringify(state.elements));
     window.sessionStorage.setItem("screen_" + state.screenId, JSON.stringify(state.screen));
+    // 更新saveTag
+    commit("history/updateSaveTagId", null, { root: true });
   },
   addElements({ commit, state }, value) {
-    commit("setElements", [value]);
+    commit("pushElements", [value]);
   },
   fetchElements({ commit, state }) {
     const elementsStr = window.sessionStorage.getItem("elements_" + state.screenId);
@@ -91,12 +93,24 @@ const actions = {
       next = false,
     } = value;
     const target = next ? "__new" : "__old";
-    console.log("target, diff", target, diff);
     if (type === "screen") {
-      console.log("diff----", diff);
       Object.keys(diff).forEach(async key => {
         await commit("updateScreenProp", { key, val: diff[key][target] });
       });
+    } else if (type === "elements") {
+      for (let index = 0; index < diff.length; index++) {
+        // diffType: 删除 (-)、新增 (+)、更改的子对象 (~) 或未更改的 (' ')
+        const [diffType, data] = diff[index];
+        if (diffType === "~") {
+          Object.keys(data).forEach(async key => {
+            await commit("updateElementProp", { index, key, val: data[key][target] });
+          });
+        } else if (diffType === "+") {
+          next ? commit("pushElements", [data]) : commit("popElement");
+        } else if (diffType === "-") {
+          next ? commit("popElement", index) : commit("insertElement", { index, element: [data] });
+        }
+      }
     }
   },
 };

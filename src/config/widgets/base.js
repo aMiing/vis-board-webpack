@@ -47,7 +47,7 @@ const BaseConfig = {
   border: {
     label: "边框",
     props: {
-      borderWidth: [0],
+      borderWidth: [0, 0, 0, 0],
       borderStyle: ["dashed"],
       borderColor: [],
       borderUnit: "px",
@@ -56,14 +56,14 @@ const BaseConfig = {
   radius: {
     label: "圆角",
     props: {
-      borderRadius: [0],
+      borderRadius: [0, 0, 0, 0],
       radiusUnit: "px",
     },
   },
   padding: {
     label: "边距",
     props: {
-      padding: [0],
+      padding: [0, 0, 0, 0],
       paddingUnit: "px",
     },
   },

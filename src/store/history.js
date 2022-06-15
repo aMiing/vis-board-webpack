@@ -1,6 +1,6 @@
 import { updateIsFromHistory } from "@/utils/compare";
 const state = {
-  historyQueue: [{ type: "screen", id: "", diff: [] }],
+  historyQueue: [{ type: "", id: "", diff: [] }],
   maxHistoryLength: 10,
   currentHistoryId: "",
   useHistory: false, //是否记录操作历史
@@ -58,6 +58,9 @@ const mutations = {
   },
   isUndoOperator(state, value) {
     state.isUndo = value;
+  },
+  updateSaveTagId(state) {
+    state.savedTagId = state.historyQueue[state.currentIndex]?.id;
   },
 };
 
