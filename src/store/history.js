@@ -1,8 +1,9 @@
 import { updateIsFromHistory } from "@/utils/compare";
 const state = {
-  historyQueue: [{ type: "screen", id: "testId", diff: [] }],
+  historyQueue: [{ type: "screen", id: "", diff: [] }],
   maxHistoryLength: 10,
   currentHistoryId: "",
+  useHistory: false, //是否记录操作历史
   savedTagId: "", //标记保存状态
   currentIndex: 0,
   isUndo: false, // 是否是在执行redo
@@ -23,7 +24,7 @@ const getters = {
     return !state.historyQueue.length || state.historyQueue.length - 1 === state.currentIndex;
   },
   noNeedBeSave(state) {
-    return state.savedTagId === state.currentHistoryId;
+    return state.savedTagId === state.historyQueue[state.currentIndex]?.id;
   },
   historyLength(state) {
     return state.historyQueue.length;
@@ -49,6 +50,12 @@ const mutations = {
     console.log("coverOldHistory", index);
     state.historyQueue.splice(index + 1, state.maxHistoryLength);
   },
+  startRecordHistory(state) {
+    state.useHistory = true;
+  },
+  stopRecordHistory(state) {
+    state.useHistory = false;
+  },
   isUndoOperator(state, value) {
     state.isUndo = value;
   },
@@ -61,7 +68,7 @@ const actions = {
     console.log("fromHistory", fromHistory);
     // 更新isUndo
     commit("isUndoOperator", false);
-    if (fromHistory) return;
+    if (fromHistory || !state.useHistory) return;
     // 如果当前下标不在数组的最后，则覆盖其后
     if (!getters.isLastHistory(state)) {
       commit("coverOldHistory");
