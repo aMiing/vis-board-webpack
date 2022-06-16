@@ -9,7 +9,6 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@gausszhou/vue-drag-resize-rotate": "^2.0.12",
     "axios": "^0.26.1",
     "axios-mock-adapter": "^1.20.0",
     "color-interpolate": "^1.0.5",
@@ -33,6 +32,7 @@
     "vfg-field-object": "^0.0.4",
     "vue": "^2.6.11",
     "vue-color": "^2.8.1",
+    "vue-draggable-resizable-gorkys": "^2.4.8",
     "vue-form-generator": "^2.3.4",
     "vue-resource": "^1.5.3",
     "vue-router": "^3.5.4",

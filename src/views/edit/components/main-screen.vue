@@ -7,15 +7,15 @@
     @dragover="dragover"
     @drop="drop"
   >
-    <vue-drag-resize-rotate
+    <vdr
       v-for="item in elements"
       class-name="drag-box"
       :key="item.id"
       :parent="true"
       :grid="[20, 20]"
       :rotatable="true"
-      :w="item.width"
-      :h="item.height"
+      :w="item.width + 2"
+      :h="item.height + 2"
       :x="item.posX"
       :y="item.posY"
       :r="item.romate"
@@ -35,7 +35,7 @@
       <div class="component-event" @click.stop="switchSettingType(item)">
         <component :is="item.name" :data="transStyle(item)"></component>
       </div>
-    </vue-drag-resize-rotate>
+    </vdr>
     <span
       class="ref-line v-line"
       v-for="(item, index) in vLine"
@@ -57,9 +57,9 @@
 </template>
 
 <script>
-import VueDragResizeRotate from "@gausszhou/vue-drag-resize-rotate";
+import vdr from "vue-draggable-resizable-gorkys";
+import "vue-draggable-resizable-gorkys/dist/VueDraggableResizable.css";
 import modules from "@/components/widgets/index.js";
-import { cloneDeep } from "lodash";
 
 import { mapGetters, mapActions } from "vuex";
 export default {
@@ -75,7 +75,7 @@ export default {
     },
   },
   components: {
-    VueDragResizeRotate,
+    vdr,
     ...modules,
   },
 
@@ -121,8 +121,8 @@ export default {
     resizestop({ x, y, w, h }, item) {
       item.posX = x;
       item.posY = y;
-      item.width = w;
-      item.height = h;
+      item.width = w - 2;
+      item.height = h - 2;
     },
     dragover(event) {
       // 阻止浏览器的默认事件
