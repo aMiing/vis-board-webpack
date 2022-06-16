@@ -31,6 +31,9 @@ npm run lint
 
 - [ ] 前进后退 (基本完成)
 - [ ] 更换自由变换组件
+- [ ] 组件的 删除、复制 功能 (完成)
+- [ ] 右键菜单功能
+- [ ] **代码导出功能**（[参考](https://github.com/vuegg/vuegg)）
 
   #### undo\redo 思路
 
@@ -60,6 +63,6 @@ vue-drag-resize-rotate 组件的坑：
 - screenData && screenConfig
 - scale 缩放数据不应该作为屏幕数据被存储，会污染属性， scale 的生命周期仅存在于当前次的编辑。
 
-### 数据变更（解耦）
+<!-- ### 数据变更（解耦） -->
 
-属性配置面板数据变化之后应该作为一次 commit 提交到 store， store 更新数据触发主舞台预览
+<!-- 属性配置面板数据变化之后应该作为一次 commit 提交到 store， store 更新数据触发主舞台预览 -->

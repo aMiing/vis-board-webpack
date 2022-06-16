@@ -63,6 +63,7 @@
           :value="screen"
           :activatedEl="activatedEl"
           :clickTarget="clickTarget"
+          @updateSelectedTarget="onWidgetActivated"
         ></property-config>
       </g-drag-box>
     </div>

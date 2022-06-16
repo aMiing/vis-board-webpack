@@ -1,25 +1,27 @@
 <template>
   <div class="setting-content">
-    <el-tabs v-if="activatedEl" type="border-card" :stretch="true">
-      <el-tab-pane label="样式">
+    <div class="flex-item__tab">
+      <el-tabs v-model="activeTab" type="card" :stretch="true">
+        <el-tab-pane name="style" label="样式"></el-tab-pane>
+        <el-tab-pane name="data" label="数据"></el-tab-pane>
+        <el-tab-pane name="interactive" label="交互"></el-tab-pane>
+      </el-tabs>
+    </div>
+    <div class="flex-item__content">
+      <div class="tab-style" v-show="activeTab === 'style'">
         <div class="widget-title">组件名称： {{ activatedEl.label || "--" }}</div>
         <attrConfig :data="activatedEl" />
-      </el-tab-pane>
-      <el-tab-pane label="数据">
-        <span>數據部分</span>
-      </el-tab-pane>
-      <el-tab-pane label="交互">
-        <h3>
-          <span style="padding: 0">交互配置</span>
-        </h3>
-      </el-tab-pane>
-    </el-tabs>
-    <div v-else class="no-data">
-      <p>请先选择组件~</p>
+      </div>
+    </div>
+
+    <div class="element-operations-group">
+      <operator-group :options="btnList" :iconOnly="true"></operator-group>
     </div>
   </div>
 </template>
 <script>
+import operatorGroup from "@/components/operator-group/index.vue";
+import { mapActions, mapMutations } from "vuex";
 import attrConfig from "./widget/attributes.vue";
 export default {
   name: "WidgetConfig",
@@ -31,30 +33,64 @@ export default {
   },
   components: {
     attrConfig,
+    operatorGroup,
   },
   data() {
     return {
-      pageComponents: [],
-      data: {
-        title: "组件名",
-      },
+      activeTab: "style",
+      btnList: [
+        {
+          name: "删除",
+          iconClass: "icon-shanchu",
+          click: () => this.delete(),
+        },
+        {
+          name: "复制",
+          iconClass: "icon-CreateTask",
+          click: () => this.copy(),
+        },
+      ],
     };
   },
   computed: {},
+  methods: {
+    ...mapMutations("panel", ["deleteElement"]),
+    ...mapActions("panel", ["copyElement"]),
+    delete() {
+      this.deleteElement(this.activatedEl?.id);
+      this.$emit("updateSelectedTarget", null);
+    },
+    async copy() {
+      const result = await this.copyElement(this.activatedEl);
+      this.$emit("updateSelectedTarget", result);
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
 .setting-content {
   position: relative;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   .widget-title {
     line-height: 32px;
     padding: 4px 0;
     font-weight: 600;
   }
-}
-.no-data {
-  text-align: center;
-  padding: 12px;
+  .flex-item__content {
+    flex: 1;
+    overflow: auto;
+    padding: 0 16px 8px;
+  }
+  .element-operations-group {
+    width: 100%;
+    height: 34px;
+    opacity: 0.7;
+    border-top: 1px solid var(--grey-1);
+    padding: 4px 16px;
+    text-align: center;
+  }
 }
 </style>

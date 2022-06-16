@@ -1,5 +1,6 @@
 import { diff } from "json-diff";
 import UUID from "@/utils/uid.js";
+import { cloneDeep } from "lodash";
 import screenConfig from "@/config/screen.js";
 const defaultScreen = Object.keys(screenConfig).reduce((total, e) => {
   return Object.assign(total, { ...screenConfig[e]?.props });
@@ -55,6 +56,11 @@ const mutations = {
   updateElementProp(state, { index, key, val }) {
     state.elements[index][key] = val;
   },
+  // 删除
+  deleteElement(state, id) {
+    const index = state.elements.findIndex(e => e.id === id);
+    ~index && state.elements.splice(index, 1);
+  },
 };
 const actions = {
   // 任何属性和数据的变更都通过此方法提交，不再通过监听的方式获取变化
@@ -85,6 +91,12 @@ const actions = {
     const screenStr = window.sessionStorage.getItem("screen_" + state.screenId);
     const screen = JSON.parse(screenStr || "{}");
     commit("useScreen", screen);
+  },
+
+  copyElement({ commit }, ele) {
+    const newEle = cloneDeep({ ...ele, id: UUID(), text: ele.text + "-copy" });
+    commit("pushElements", [newEle]);
+    return newEle;
   },
   updateFromDiff({ commit, state }, value) {
     // next = false, 后退

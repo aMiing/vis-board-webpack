@@ -1,20 +1,20 @@
 <template>
   <div class="config">
-    <div class="tabs-content">
+    <!-- <div class="tabs-content">
       <el-tabs type="card" v-model="activeTab" :stretch="true">
         <el-tab-pane class="radio-item" name="screen" label="屏幕设置"></el-tab-pane>
         <el-tab-pane class="radio-item" name="widget" label="组件设置"></el-tab-pane>
       </el-tabs>
-    </div>
+    </div> -->
     <div class="config__main">
       <!-- 组件属性设置面板 -->
       <widget-config
-        v-show="activeTab === 'widget'"
+        v-if="activeTab === 'widget'"
         v-bind="$attrs"
         v-on="$listeners"
       ></widget-config>
       <screen-config
-        v-show="activeTab === 'screen'"
+        v-if="activeTab === 'screen'"
         v-bind="$attrs"
         v-on="$listeners"
       ></screen-config>
@@ -42,6 +42,7 @@ export default {
       this.activeTab = val;
     },
   },
+  methods: {},
 };
 </script>
 
