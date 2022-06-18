@@ -1,6 +1,7 @@
 import { diff } from "json-diff";
 import UUID from "@/utils/uid.js";
 import { cloneDeep } from "lodash";
+import localforage from "localforage";
 import screenConfig from "@/config/screen.js";
 const defaultScreen = Object.keys(screenConfig).reduce((total, e) => {
   return Object.assign(total, { ...screenConfig[e]?.props });
@@ -10,8 +11,6 @@ const state = {
   elements: [],
   screen: defaultScreen,
   screenId: "",
-  screenChanged: false,
-  elementsChanged: false,
 };
 const getters = {
   screenData: state => {
@@ -20,9 +19,6 @@ const getters = {
   },
   getElements: state => {
     return state.elements;
-  },
-  changed: state => {
-    return state.screenChanged || state.elementsChanged;
   },
   getSnapshotQueue: state => {
     return state.snapshotQueue;
@@ -73,24 +69,13 @@ const actions = {
     _diff && dispatch("history/addHistory", { type, id: UUID(), diff: _diff }, { root: true });
   },
   // 模拟向后台提交
-  saveData({ commit, state }) {
-    window.sessionStorage.setItem("elements_" + state.screenId, JSON.stringify(state.elements));
-    window.sessionStorage.setItem("screen_" + state.screenId, JSON.stringify(state.screen));
+  async saveData({ commit, state }) {
+    await localforage.setItem(state.screenId, state);
     // 更新saveTag
     commit("history/updateSaveTagId", null, { root: true });
   },
   addElements({ commit, state }, value) {
     commit("pushElements", [value]);
-  },
-  fetchElements({ commit, state }) {
-    const elementsStr = window.sessionStorage.getItem("elements_" + state.screenId);
-    const elements = JSON.parse(elementsStr || "[]");
-    commit("useElements", elements);
-  },
-  fetchScreenData({ commit, state }) {
-    const screenStr = window.sessionStorage.getItem("screen_" + state.screenId);
-    const screen = JSON.parse(screenStr || "{}");
-    commit("useScreen", screen);
   },
 
   copyElement({ commit }, ele) {

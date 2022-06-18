@@ -53,7 +53,6 @@ export default {
         if (valid) {
           this.logining = true;
           //响应成功
-          // sessionStorage.setItem("user", JSON.stringify(user));
           this.$router.push({ path: "/" });
           this.logining = false;
         }

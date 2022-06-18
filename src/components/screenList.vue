@@ -44,6 +44,7 @@ import GtCardList from "./gt-card-list/index.vue";
 import operatorGroup from "@/components/operator-group/";
 import { mapGetters } from "vuex";
 import screenConfig from "@/config/screen.js";
+import localforage from "localforage";
 const defaultImg = require("@/assets/images/bg.png");
 
 export default {
@@ -117,17 +118,16 @@ export default {
     getId() {
       return Math.random().toString(16).slice(2);
     },
-    // 数据变动之后，更新storage
+    // 数据变动
     updateData() {
-      const panelListStr = JSON.stringify(this.panels);
-      //   存储或更新localstorage
-      window.sessionStorage.setItem("panelListStr", panelListStr);
+      //   存储或更新
+      localforage.setItem("panelListStr", this.panels);
     },
 
-    getPanelList() {
+    async getPanelList() {
       //   获取panelList
-      const list = window.sessionStorage.getItem("panelListStr") || "[]";
-      this.panels = JSON.parse(list);
+      const list = (await localforage.getItem("panelListStr")) || [];
+      this.panels = list;
     },
 
     deleatePanel({ id }) {
