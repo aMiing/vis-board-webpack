@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import panel from "./panel";
+import editor from "./editor";
 import user from "./user";
 import history from "./history";
 
@@ -12,7 +12,7 @@ export default new Vuex.Store({
   actions: {},
   modules: {
     user,
-    panel,
+    editor,
     history,
   },
 });

@@ -75,7 +75,7 @@ export default {
   },
   computed: {
     ...mapGetters("user", ["getUserInfo"]),
-    ...mapGetters("panel", {
+    ...mapGetters("editor", {
       screen: "screenData",
       changed: "changed",
     }),
@@ -95,7 +95,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions("panel", ["saveData"]),
+    ...mapActions("editor", ["saveData"]),
     ...mapActions("history", { undo: "undo", redo: "redo" }),
     //退出登录
     logout: function () {

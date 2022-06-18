@@ -39,7 +39,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions("panel", ["addElements"]),
+    ...mapActions("editor", ["addElements"]),
     getRandomId() {
       return Math.random().toString(16).slice(2);
     },

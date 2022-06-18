@@ -130,7 +130,7 @@ export default {
     });
   },
   methods: {
-    ...mapActions("panel", ["recordDataChange"]),
+    ...mapActions("editor", ["recordDataChange"]),
     updateParentStyle(scale) {
       const { width, height, sizeUnit } = this.screen;
       this.contentStyle["width"] = width * scale + sizeUnit;

@@ -54,8 +54,8 @@ export default {
   },
   computed: {},
   methods: {
-    ...mapMutations("panel", ["deleteElement"]),
-    ...mapActions("panel", ["copyElement"]),
+    ...mapMutations("editor", ["deleteElement"]),
+    ...mapActions("editor", ["copyElement"]),
     delete() {
       this.deleteElement(this.activatedEl?.id);
       this.$emit("updateSelectedTarget", null);

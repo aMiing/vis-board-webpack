@@ -92,7 +92,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions("panel", ["addElements"]),
+    ...mapActions("editor", ["addElements"]),
     async UseIt(widget) {
       const randomId = Math.random().toString(16).slice(2);
       //   从配置项中获取基础配置

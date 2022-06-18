@@ -106,7 +106,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions("panel", ["addElements"]),
+    ...mapActions("editor", ["addElements"]),
     getBoxSize(value) {
       return value + 2;
     },

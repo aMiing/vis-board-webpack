@@ -5,7 +5,7 @@ export default {
     return {};
   },
   computed: {
-    ...mapGetters("panel", { screen: "screenData", elements: "getElements" }),
+    ...mapGetters("editor", { screen: "screenData", elements: "getElements" }),
   },
   async mounted() {
     // 更新id
@@ -16,7 +16,7 @@ export default {
   },
   methods: {
     ...mapMutations("history", ["startRecordHistory"]),
-    ...mapMutations("panel", ["updateId", "useElements", "useScreen"]),
+    ...mapMutations("editor", ["updateId", "useElements", "useScreen"]),
     async fetchData(id) {
       const data = await localforage.getItem(id);
       if (data) {
