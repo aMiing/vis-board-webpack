@@ -3,6 +3,7 @@ import Vuex from "vuex";
 import editor from "./editor";
 import user from "./user";
 import history from "./history";
+import panels from "./panels";
 
 Vue.use(Vuex);
 
@@ -14,5 +15,6 @@ export default new Vuex.Store({
     user,
     editor,
     history,
+    panels,
   },
 });

@@ -42,9 +42,9 @@
 <script>
 import GtCardList from "./gt-card-list/index.vue";
 import operatorGroup from "@/components/operator-group/";
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import screenConfig from "@/config/screen.js";
-import localforage from "localforage";
+import UUID from "../utils/uid";
 const defaultImg = require("@/assets/images/bg.png");
 
 export default {
@@ -55,12 +55,6 @@ export default {
   },
   data() {
     return {
-      createNewPanelDialog: false,
-      dialogVisible: false,
-      dialogEditVisible: false,
-      formLabelWidth: "120px",
-      panels: [],
-
       operationList: [
         {
           id: 1,
@@ -88,13 +82,13 @@ export default {
   },
   computed: {
     ...mapGetters("user", ["getUserInfo"]),
+    ...mapGetters("panels", { panels: "getList" }),
   },
-
-  mounted() {
+  created() {
     this.getPanelList();
   },
-
   methods: {
+    ...mapActions("panels", ["getPanelList", "addList", "deleteDataById"]),
     addPanel(data) {
       const defaultModel = Object.keys(screenConfig).reduce((total, e) => {
         return Object.assign(total, { ...screenConfig[e]?.props });
@@ -103,31 +97,13 @@ export default {
         ...defaultModel,
         ...data,
         backgroundImage: defaultImg,
-        id: this.getId(),
+        id: UUID(),
         createTime: new Date().getTime(),
         creator: this.getUserInfo?.userName,
         viewCount: 0,
         followed: 0,
       };
-
-      console.log("newPanel", newPanel);
-      this.panels.unshift(newPanel); //本地更新面板列表
-      this.updateData();
-    },
-
-    getId() {
-      return Math.random().toString(16).slice(2);
-    },
-    // 数据变动
-    updateData() {
-      //   存储或更新
-      localforage.setItem("panelListStr", this.panels);
-    },
-
-    async getPanelList() {
-      //   获取panelList
-      const list = (await localforage.getItem("panelListStr")) || [];
-      this.panels = list;
+      this.addList(newPanel);
     },
 
     deleatePanel({ id }) {
@@ -135,11 +111,8 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning",
-      }).then(() => {
-        const index = this.panels.findIndex(e => e.id === id);
-        this.panels.splice(index, 1);
-        //    更新数据
-        this.updateData();
+      }).then(async () => {
+        await this.deleteDataById(id);
         this.$message({
           type: "success",
           message: "删除成功!",
