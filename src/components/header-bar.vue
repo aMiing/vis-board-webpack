@@ -43,7 +43,7 @@ export default {
           iconClass: "icon-houtui-shi",
           click: () => this.undo(),
           disabled: {
-            cb: () => !this.currentHistoryIndex,
+            cb: () => !this.canUndo,
             tips: "没有上一步了~",
           },
         },
@@ -52,7 +52,7 @@ export default {
           iconClass: "icon-qianjin-shi",
           click: () => this.redo(),
           disabled: {
-            cb: () => this.currentHistoryIndex >= this.historyLength - 1,
+            cb: () => !this.canRedo,
             tips: "已经是最后一步了",
           },
         },
@@ -79,14 +79,7 @@ export default {
       screen: "screenData",
       changed: "changed",
     }),
-    ...mapGetters("history", [
-      "isLastHistory",
-      "isFirstHistory",
-      "noHistory",
-      "noNeedBeSave",
-      "currentHistoryIndex",
-      "historyLength",
-    ]),
+    ...mapGetters("history", ["isFirstHistory", "noNeedBeSave", "canRedo", "canUndo"]),
     isEdit() {
       return this.$route?.name === "edit";
     },

@@ -90,7 +90,6 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("history", ["isLastHistory"]),
     screenConfig() {
       const { width, height, sizeUnit = "px", fontSize, fontUnit } = this.screen;
       return {
