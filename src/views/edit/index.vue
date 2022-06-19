@@ -152,7 +152,7 @@ export default {
       this.updateParentStyle(this.scale);
     },
     onWidgetActivated(ele) {
-      console.log("onWidgetActivated");
+      // console.log("onWidgetActivated");
       if (ele) {
         this.activatedEl = ele;
         this.clickTarget = "widget";

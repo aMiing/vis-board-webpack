@@ -2,7 +2,7 @@ export const menuList = [
   {
     path: "list",
     name: "home.list",
-    component: () => import(/* webpackChunkName: "manage" */ "@/views/list/panel.vue"),
+    component: () => import(/* webpackChunkName: "manage" */ "@/views/panel/index.vue"),
     meta: {
       label: "看板管理",
       iconCls: "iconfont icon-kanbanguanli",

@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import screenList from "@/components/screenList";
+import screenList from "./components/list";
 import createDialog from "@/components/dialog/create-dialog";
 export default {
   name: "PanelList",

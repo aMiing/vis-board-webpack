@@ -221,7 +221,6 @@ export default {
       //console.log(oDrag);
       //阻止事件冒泡
       e.stopPropagation();
-      console.log();
     },
   },
 };

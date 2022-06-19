@@ -9,7 +9,8 @@ const getters = {
 };
 const mutations = {
   setList(state, value) {
-    state.list.push(...value);
+    // state.list.push(...value);
+    state.list = value;
   },
   addList(state, value) {
     state.list.unshift(value);

@@ -30,7 +30,7 @@ const routeList = [
   },
 
   {
-    path: "preview",
+    path: "/preview",
     name: "preview",
     component: () => import(/* webpackChunkName: "preview" */ "@/views/preview/index.vue"),
     meta: {

@@ -9,14 +9,6 @@
 
     <div class="card-list-content">
       <g-card-list v-loading="loading" min-width="300">
-        <!-- <template #prepend>
-            <a class="g-card --add" @click="onCreate">
-              <div class="g-card__body">
-                <i class="iconfont_gai icontianjia1 g-card__icon"></i>
-                新建可视化
-              </div>
-            </a>
-          </template> -->
         <g-card
           v-for="card in panels"
           :key="card.id"
@@ -59,7 +51,7 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import screenConfig from "@/config/screen.js";
-import UUID from "../utils/uid";
+import UUID from "@/utils/uid";
 import dayjs from "dayjs";
 const defaultImg = require("@/assets/images/bg.png");
 
@@ -206,77 +198,9 @@ export default {
   .card-list-content {
     flex: 1;
     overflow: auto;
-
     .iconfont {
       font-size: 20px;
-      cursor: pointer;
-    }
-    .preview-img {
-      width: 100%;
-      height: 100%;
-      object-fit: scale-down;
-    }
-    .model-item-row {
-      padding: 4px 0;
-      display: flex;
-      justify-content: space-between;
-      height: 28px;
-      line-height: 20px;
-      .viewCount {
-        color: var(--grey-11);
-        .iconfont {
-          vertical-align: bottom;
-        }
-        .count {
-          padding: 0 4px;
-        }
-      }
-    }
-
-    .modal_operation__modal {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background: var(--grey-1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      color: var(--grey-11);
-      font-size: var(--font-size-s);
-      &.active {
-        opacity: 0.8;
-        transition: all 0.3s;
-      }
-      &:hover {
-        opacity: 0.8;
-        transition: all 0.3s;
-      }
     }
   }
-}
-.edit {
-  position: absolute;
-  margin: 45px 90px;
-  background-color: #6bf;
-  border-color: #6bf;
-  width: 60px;
-  z-index: 11;
-}
-
-#dialog > i {
-  position: absolute;
-  margin: 5px 215px;
-  font-size: 18px;
-  z-index: 11;
-  color: #fff;
-}
-.dialog-modal {
-  position: absolute;
-  width: 240px;
-  height: 145px;
-  z-index: 9;
-  background-color: #000;
-  opacity: 0.8;
 }
 </style>

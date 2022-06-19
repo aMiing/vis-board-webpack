@@ -26,9 +26,7 @@ export default {
       screenConfig,
     };
   },
-  mounted() {
-    console.log("this.screen", this.screen);
-  },
+  mounted() {},
   methods: {
     getComponent(key) {
       const transMap = {
