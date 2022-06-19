@@ -6,7 +6,7 @@
     </div>
 
     <div v-if="isEdit" class="operations-group">
-      <operator-group :options="btnList" :iconOnly="true"></operator-group>
+      <g-operation-group :options="btnList" :iconOnly="true"></g-operation-group>
     </div>
     <div class="userinfo">
       <el-dropdown trigger="hover">
@@ -21,49 +21,41 @@
   </div>
 </template>
 <script>
-import operatorGroup from "@/components/operator-group/index.vue";
 import { mapGetters, mapActions, mapMutations } from "vuex";
 export default {
   name: "HeaderBar",
-  components: { operatorGroup },
   data() {
     return {
       btnList: [
         {
           name: "保存",
-          iconClass: "icon-baocun",
+          iconClass: "iconfont icon-baocun",
           click: () => this.save(),
-          disabled: {
-            cb: () => this.noNeedBeSave,
-            tips: "无变更需要保存",
-          },
+          disabled: () => this.noNeedBeSave,
+          reason: "无变更需要保存",
         },
         {
           name: "上一步",
-          iconClass: "icon-houtui-shi",
+          iconClass: "iconfont icon-houtui-shi",
           click: () => this.undo(),
-          disabled: {
-            cb: () => !this.canUndo,
-            tips: "没有上一步了~",
-          },
+          disabled: () => !this.canUndo,
+          reason: "没有上一步了~",
         },
         {
           name: "下一步",
-          iconClass: "icon-qianjin-shi",
+          iconClass: "iconfont icon-qianjin-shi",
           click: () => this.redo(),
-          disabled: {
-            cb: () => !this.canRedo,
-            tips: "已经是最后一步了",
-          },
+          disabled: () => !this.canRedo,
+          reason: "已经是最后一步了",
         },
         {
           name: "发布",
-          iconClass: "icon-fabu",
+          iconClass: "iconfont icon-fabu",
           click: row => console.log(row),
         },
         {
           name: "预览",
-          iconClass: "icon-yulan",
+          iconClass: "iconfont icon-yulan",
           click: row => console.log(row),
         },
       ],

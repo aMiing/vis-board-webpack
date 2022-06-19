@@ -30,7 +30,7 @@ npm run lint
 - [ ] 组件列表样式调整 只显示图标，点击在下面展示名称和简介 (待定)
 
 - [ ] 前进后退 (基本完成)
-- [ ] 更换自由变换组件
+- [ ] 更换自由变换组件（完成）
 - [ ] 组件的 删除、复制 功能 (完成)
 - [ ] 右键菜单功能
 - [ ] **代码导出功能**（[参考](https://github.com/vuegg/vuegg)）
@@ -54,8 +54,6 @@ npm run lint
 vue-drag-resize-rotate 组件的坑：
 
 1. 限制父级时 resizestop 事件回调行为异常， 边缘计算未正确更新 right 数据，导致最终计算的宽高窜在问题。[issue]<https://github.com/gausszhou/vue-drag-resize-rotate/issues/14>
-
-- 导出文件
 
 ### 数据思路
 

@@ -8,9 +8,29 @@
     </div>
 
     <div class="card-list-content">
-      <GtCardList :cardList="panels" :showState="false" :rowMaxNum="6">
-        <template v-slot:operator="{ card }">
-          <div class="model-item-row mt-8">
+      <g-card-list v-loading="loading" min-width="300">
+        <!-- <template #prepend>
+            <a class="g-card --add" @click="onCreate">
+              <div class="g-card__body">
+                <i class="iconfont_gai icontianjia1 g-card__icon"></i>
+                新建可视化
+              </div>
+            </a>
+          </template> -->
+        <g-card
+          v-for="card in panels"
+          :key="card.id"
+          class="card-custom-class"
+          :title="card.title"
+          :img="card.backgroundImage"
+        >
+          <template #meta1st>
+            <span class="creator-box">{{ card.creator }}</span>
+            <span class="update-time-box">
+              {{ card.createTime | filterTime() }}
+            </span>
+          </template>
+          <template #meta2nd>
             <div class="viewCount">
               <i class="iconfont icon-yulan"></i>
               <span class="count">{{ card.viewCount || 0 }}</span>
@@ -24,56 +44,54 @@
                 ></i>
               </el-link>
             </div>
-          </div>
-        </template>
-        <template v-slot:mode_operation="{ card }">
-          <div class="modal_operation__modal" v-if="operationList.length">
-            <operator-group :options="operationList" :data="card"></operator-group>
-          </div>
-        </template>
-        <template v-slot:preview="{ card }">
-          <img :src="card.backgroundImage" class="preview-img" alt="预览图片" />
-        </template>
-      </GtCardList>
+          </template>
+          <template #operator>
+            <div class="g-card__operation">
+              <g-operation-group :options="operationList" :data="card"></g-operation-group>
+            </div>
+          </template>
+        </g-card>
+      </g-card-list>
     </div>
   </div>
 </template>
 
 <script>
-import GtCardList from "./gt-card-list/index.vue";
-import operatorGroup from "@/components/operator-group/";
 import { mapActions, mapGetters } from "vuex";
 import screenConfig from "@/config/screen.js";
 import UUID from "../utils/uid";
+import dayjs from "dayjs";
 const defaultImg = require("@/assets/images/bg.png");
 
 export default {
   name: "ScrrenList",
-  components: {
-    GtCardList,
-    operatorGroup,
+  filters: {
+    filterTime(time) {
+      return time ? dayjs(time).format("YYYY-MM-DD HH:mm:ss") : "--";
+    },
   },
   data() {
     return {
+      loading: false,
       operationList: [
         {
           id: 1,
           name: "编辑",
-          iconClass: "icon-bianji",
+          iconClass: "iconfont icon-bianji",
           hidden: row => row.type === "1",
           click: row => this.goNextPage("edit", row),
         },
         {
           id: 3,
           name: "预览",
-          iconClass: "icon-yulan",
+          iconClass: "iconfont icon-yulan",
           hidden: row => row.type === "1",
           click: row => this.goNextPage("preview", row),
         },
         {
           id: 2,
           name: "删除",
-          iconClass: "icon-shanchu",
+          iconClass: "iconfont icon-shanchu",
           hidden: row => row.type === "1",
           click: row => this.deleatePanel(row),
         },

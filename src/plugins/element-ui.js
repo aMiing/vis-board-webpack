@@ -6,10 +6,12 @@ import {
   GQueryBox,
   GLoading,
   GBadge,
-  GTextMiddleEllipsis,
   GTextEllipsis,
   GEmpty,
   GDragBox,
+  GOperationGroup,
+  GCard,
+  GCardList,
 } from "@/femc";
 
 [
@@ -20,10 +22,12 @@ import {
   GLoading,
   GBadge,
   GPageHeader,
-  GTextMiddleEllipsis,
   GTextEllipsis,
   GEmpty,
   GDragBox,
+  GOperationGroup,
+  GCard,
+  GCardList,
 ].forEach(component => Vue.use(component));
 
 // TODO 以下是原来的代码，后面看看能不能删
