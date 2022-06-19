@@ -30,7 +30,9 @@
         @hide="$emit('hideMore', data)"
       >
         <el-link slot="reference" :underline="false">
-          <i class="reference__icon" :class="moreIcon"></i>
+          <div class="btn-item-content">
+            <i class="reference__icon" :class="moreIcon"></i>
+          </div>
         </el-link>
         <div v-for="(expandItem, idx) in btn.expandBtns" :key="idx" class="expand-item">
           <el-tooltip
@@ -102,11 +104,11 @@ export default {
   },
   methods: {
     isDisabled(btn) {
-      return btn.disabled && btn.disabled.cb(this.data);
+      return btn.disabled && btn.disabled(this.data);
     },
     tooltipText(btn) {
       const disable = this.isDisabled(btn);
-      return disable ? btn.disabled.tips || btn.name + '不可用' : this.iconOnly ? btn.name : '';
+      return disable ? btn.reason || btn.name + '不可用' : this.iconOnly ? btn.name : '';
     },
   },
   render(h) {
@@ -142,7 +144,7 @@ export default {
 }
 .el-link.el-link--default:not(.is-disabled):hover {
   * {
-    color: var(--blue-5);
+    color: var(--blue-7);
   }
 }
 .more-btn {

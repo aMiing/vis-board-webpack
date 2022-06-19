@@ -12,8 +12,16 @@ function axiosInterceptors(axios) {
   // 添加请求拦截器
   axios.interceptors.request.use(
     function (config) {
-      // TODO:在gpu发送请求之前做些什么
-      config.headers = Object.assign(config.headers, getHeader());
+      // TODO:发送请求之前做些什么
+      const _hearder = getHeader();
+      for (var key in _hearder) {
+        Object.defineProperty(config.headers, key, {
+          enumerable: true,
+          configurable: true, // 是否可以被重新配置
+          writable: false, // 是否可以被修改
+          value: _hearder[key],
+        });
+      }
       return config;
     },
     function (error) {

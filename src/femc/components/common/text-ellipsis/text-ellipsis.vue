@@ -1,5 +1,5 @@
 <template>
-  <el-tooltip v-if="tooltip" v-bind="$attrs" :content="text">
+  <el-tooltip v-if="!banTooltip && hasEllipsis" v-bind="$attrs" :content="text">
     <div v-if="hasSlot" slot="content">
       <slot name="content"> </slot>
     </div>
@@ -22,18 +22,19 @@ export default {
       type: String,
       default: '',
     },
-    endOffset: {
+    dotOffsetLeft: {
       type: [Number, String],
-      default: 1,
+      default: 0,
     },
-    tooltip: {
+    banTooltip: {
       type: Boolean,
-      default: true,
+      default: false,
     },
   },
   data() {
     return {
       showText: '',
+      hasEllipsis: false,
     };
   },
   computed: {
@@ -71,9 +72,10 @@ export default {
       const parentWidth = getActualElementWidth(el);
       const realWidth = getActualWidthOfChars(text, font);
       if (parentWidth < realWidth) {
-        const endOffset = +this.endOffset;
+        this.hasEllipsis = true;
+        const dotOffsetLeft = +this.dotOffsetLeft;
         const SEPARATOR = '...';
-        const rightPart = text.slice(text.length - endOffset);
+        const rightPart = text.slice(text.length - dotOffsetLeft);
         const rightPartWidth = getActualWidthOfChars(SEPARATOR + rightPart, font);
         let availableLeftWidth = Math.round(parentWidth - rightPartWidth);
         let final = '';
@@ -89,6 +91,7 @@ export default {
         final += `${SEPARATOR}${rightPart}`;
         return final;
       } else {
+        this.hasEllipsis = false;
         return text;
       }
     },

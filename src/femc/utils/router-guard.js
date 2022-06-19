@@ -3,13 +3,20 @@ function addRouterGuard(router) {
   const routes = router.getRoutes();
   const map = {};
   routes.forEach(i => {
-    let key = null;
-    i.meta.auth && Array.isArray(i.meta.auth)
-      ? // 建模，壳是数组
-        (key = i.meta.auth.join())
-      : // 治理是字符串
-        (key = i.meta.auth);
-    map[key || i.name] = i.name;
+    const { auth, pageId } = i.meta || {};
+    // 注册pageId对应路由，code为兼容方案
+    if (pageId) {
+      map[pageId] = i.name;
+    }
+    if (auth) {
+      let key = null;
+      Array.isArray(auth)
+        ? // 建模，壳是数组
+          (key = auth.join())
+        : // 治理是字符串
+          (key = auth);
+      map[key || i.name] = i.name;
+    }
   });
   router.addRoute({
     name: 'redirect',
@@ -18,7 +25,7 @@ function addRouterGuard(router) {
       const query = to.query.query ? JSON.parse(decodeURIComponent(to.query.query)) : {};
       const { _pageCode } = to.params;
       next({
-        name: map[_pageCode],
+        name: map[query.pageId] || map[_pageCode],
         params: query.params || {},
         query: query.query || {},
         replace: true,
@@ -27,8 +34,8 @@ function addRouterGuard(router) {
   });
 }
 
-function routeStringify({ code, params = {}, query = {} }) {
-  return `redirect/${code}?query=${encodeURIComponent(JSON.stringify({ params, query }))}`;
+function routeStringify({ pageId, code, params = {}, query = {} }) {
+  return `redirect/${code}?query=${encodeURIComponent(JSON.stringify({ params, query, pageId }))}`;
 }
 
 export { routeStringify, addRouterGuard };

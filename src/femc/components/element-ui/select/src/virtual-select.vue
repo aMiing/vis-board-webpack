@@ -128,10 +128,9 @@ export default {
     },
     handleFilter(value) {
       const labelKey = this.mergedOptions.label;
-      this.filterData = this.linearData.filter(item => (item[labelKey] + '').includes(value));
+      this.filterData = [];
       this.$nextTick(() => {
-        if (this.$refs.scrollbox && this.$refs.scrollbox.$el)
-          this.$refs.scrollbox.$el.scrollTo({ top: 0 });
+        this.filterData = this.linearData.filter(item => (item[labelKey] + '').includes(value));
       });
     },
     setIconClass(visible) {

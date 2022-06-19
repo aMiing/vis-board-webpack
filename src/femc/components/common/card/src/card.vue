@@ -46,9 +46,7 @@
           <g-empty size="64" :img="img.src || '模型为空'" :description="img.title" />
         </template>
       </g-image>
-      <div v-if="hasOperation" class="g-card__operation">
-        <slot name="operator" />
-      </div>
+      <slot name="operator" />
     </div>
   </li>
 </template>
@@ -97,17 +95,17 @@ export default {
     hasMeta2nd() {
       return this.$slots.meta2nd || this.meta2nd;
     },
-    hasOperation() {
-      return this.$slots.operator;
-    },
   },
   methods: {
     getMetaClass(item) {
-      if (item.left && !item.right) {
-        return '--tl';
-      } else if (!item.left && item.right) {
-        return '--tr';
+      if (item) {
+        if (item.left && !item.right) {
+          return '--tl';
+        } else if (!item.left && item.right) {
+          return '--tr';
+        }
       }
+
       return '';
     },
   },
