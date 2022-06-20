@@ -1,8 +1,9 @@
+const defaultImg = require("@/assets/widgets/image.png");
 const ImageConfig = {
-  link: {
+  src: {
     label: "链接地址",
     props: {
-      url: "",
+      url: defaultImg,
     },
   },
   objectFit: {

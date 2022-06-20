@@ -19,7 +19,7 @@
       :x="item.posX"
       :y="item.posY"
       :r="item.romate"
-      :z-index="item.zIndex"
+      :z="item.zIndex"
       :minHeight="30"
       :minWidth="30"
       :lock-aspect-ratio="lockRatio"

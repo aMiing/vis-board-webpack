@@ -1,10 +1,4 @@
 const BaseConfig = {
-  title: {
-    label: "组件名称",
-    props: {
-      title: "",
-    },
-  },
   size: {
     label: "尺寸",
     props: {
@@ -28,20 +22,20 @@ const BaseConfig = {
       backgroundImage: "",
     },
   },
-  font: {
-    label: "字体",
-    props: {
-      color: "#fff",
-      fontSize: 14,
-      fontWeight: 400,
-      fontFamily: "",
-      fontUnit: "px",
-    },
-  },
+  // font: {
+  //   label: "字体",
+  //   props: {
+  //     color: "#fff",
+  //     fontSize: 14,
+  //     fontWeight: 400,
+  //     fontFamily: "",
+  //     fontUnit: "px",
+  //   },
+  // },
   zoom: {
     label: "旋转",
     props: {
-      romate: 0,
+      rotate: 0,
     },
   },
   border: {
@@ -67,11 +61,10 @@ const BaseConfig = {
       paddingUnit: "px",
     },
   },
-
   layer: {
     label: "层级",
     props: {
-      zIndex: 0,
+      zIndex: "auto",
     },
   },
 };

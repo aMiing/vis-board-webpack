@@ -1,45 +1,43 @@
 <template>
   <div class="config">
-    <!-- <div class="tabs-content">
+    <div class="tabs-content">
       <el-tabs type="card" v-model="activeTab" :stretch="true">
-        <el-tab-pane class="radio-item" name="screen" label="屏幕设置"></el-tab-pane>
-        <el-tab-pane class="radio-item" name="widget" label="组件设置"></el-tab-pane>
+        <el-tab-pane class="radio-item" name="widget" label="组件列表"></el-tab-pane>
+        <el-tab-pane class="radio-item" name="attribute" label="属性设置"></el-tab-pane>
       </el-tabs>
-    </div> -->
-    <div class="config__main">
+    </div>
+    <Materials v-show="activeTab === 'widget'"></Materials>
+    <div class="config__main" v-show="activeTab === 'attribute'">
       <!-- 组件属性设置面板 -->
-      <widget-config
-        v-if="activeTab === 'widget'"
-        v-bind="$attrs"
-        v-on="$listeners"
-      ></widget-config>
-      <screen-config
-        v-if="activeTab === 'screen'"
-        v-bind="$attrs"
-        v-on="$listeners"
-      ></screen-config>
+      <widget-config v-if="target === 'widget'" v-bind="$attrs" v-on="$listeners"></widget-config>
+      <screen-config v-if="target === 'screen'" v-bind="$attrs" v-on="$listeners"></screen-config>
     </div>
   </div>
 </template>
 
 <script>
+import Materials from "./material";
+
 import screenConfig from "./config/screen-config";
 import widgetConfig from "./config/widget-config";
 export default {
   name: "PropertyConfig",
   props: { clickTarget: { type: String, default: "screen" } },
   components: {
+    Materials,
     screenConfig,
     widgetConfig,
   },
   data() {
     return {
-      activeTab: "screen",
+      activeTab: "widget",
+      target: "screen",
     };
   },
   watch: {
     clickTarget(val) {
-      this.activeTab = val;
+      this.target = val;
+      this.activeTab = "attribute";
     },
   },
   methods: {},

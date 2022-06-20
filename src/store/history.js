@@ -56,7 +56,6 @@ const actions = {
     // 超出长度
     if (state.historyQueue.length > state.maxHistoryLength) {
       state.historyQueue.shift();
-      newIndex--;
     }
   },
   // 向后一步

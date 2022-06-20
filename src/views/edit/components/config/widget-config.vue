@@ -1,12 +1,12 @@
 <template>
   <div class="setting-content">
-    <div class="flex-item__tab">
+    <!-- <div class="flex-item__tab">
       <el-tabs v-model="activeTab" type="card" :stretch="true">
         <el-tab-pane name="style" label="样式"></el-tab-pane>
         <el-tab-pane name="data" label="数据"></el-tab-pane>
         <el-tab-pane name="interactive" label="交互"></el-tab-pane>
       </el-tabs>
-    </div>
+    </div> -->
     <div class="flex-item__content">
       <div class="tab-style" v-show="activeTab === 'style'">
         <div class="widget-title">组件名称： {{ activatedEl.label || "--" }}</div>
@@ -15,12 +15,11 @@
     </div>
 
     <div class="element-operations-group">
-      <operator-group :options="btnList" :iconOnly="true"></operator-group>
+      <g-operation-group :options="btnList" :iconOnly="true"></g-operation-group>
     </div>
   </div>
 </template>
 <script>
-import operatorGroup from "@/components/operator-group/index.vue";
 import { mapActions, mapMutations } from "vuex";
 import attrConfig from "./widget/attributes.vue";
 export default {
@@ -33,7 +32,6 @@ export default {
   },
   components: {
     attrConfig,
-    operatorGroup,
   },
   data() {
     return {
@@ -41,12 +39,12 @@ export default {
       btnList: [
         {
           name: "删除",
-          iconClass: "icon-shanchu",
+          iconClass: "iconfont icon-shanchu",
           click: () => this.delete(),
         },
         {
           name: "复制",
-          iconClass: "icon-CreateTask",
+          iconClass: "iconfont icon-CreateTask",
           click: () => this.copy(),
         },
       ],

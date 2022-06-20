@@ -8,7 +8,13 @@
           </template>
         </el-form>
       </el-collapse-item>
-      <el-collapse-item title="专属样式" name="custom"></el-collapse-item>
+      <el-collapse-item title="文本" name="text" v-if="data.text">
+        <el-form label-width="45px">
+          <template v-for="key in ['text', 'font']">
+            <component :key="key" :is="getComponent(key)" :data="data"></component>
+          </template>
+        </el-form>
+      </el-collapse-item>
     </el-collapse>
   </div>
 </template>
@@ -22,11 +28,7 @@ export default {
   props: {
     data: {
       type: Object,
-      default: () => ({
-        attribute: "linesText",
-        name: "test",
-        id: "testid",
-      }),
+      default: () => ({}),
     },
   },
   data() {
@@ -35,10 +37,15 @@ export default {
       activeNames: ["common"],
     };
   },
+  watch: {
+    data(val) {
+      console.log("this.data", val);
+    },
+  },
   methods: {
     getComponent(key) {
       const transMap = {
-        title: "commonText",
+        text: "commonText",
         link: "linkConf",
       };
       return transMap[key] || key;

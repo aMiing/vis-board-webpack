@@ -1,6 +1,6 @@
 <template>
   <div class="image">
-    <el-image :style="data" :src="url" :fit="data.objectaFit"></el-image>
+    <el-image :style="data" :src="data.url" :fit="data.objectFit"></el-image>
   </div>
 </template>
 

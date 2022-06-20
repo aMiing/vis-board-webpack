@@ -1,7 +1,7 @@
 <template>
   <div class="edit-page">
     <!-- 左侧区域 -->
-    <div class="left-config__panel">
+    <!-- <div class="left-config__panel">
       <g-drag-box
         placement="right"
         span="0"
@@ -13,7 +13,7 @@
       >
         <materialList />
       </g-drag-box>
-    </div>
+    </div> -->
 
     <!-- 中心舞台 -->
     <div class="stage-center">
@@ -58,13 +58,13 @@
         collapse2min
         :drag="true"
       >
-        <property-config
+        <ConfigCenter
           :type="currentType"
           :value="screen"
           :activatedEl="activatedEl"
           :clickTarget="clickTarget"
           @updateSelectedTarget="onWidgetActivated"
-        ></property-config>
+        ></ConfigCenter>
       </g-drag-box>
     </div>
   </div>
@@ -72,7 +72,7 @@
 
 <script>
 import commonHeader from "./components/header";
-import PropertyConfig from "./components/property-config";
+import ConfigCenter from "./components/ConfigCenter";
 import materialList from "./components/material";
 import mainScreen from "./components/main-screen";
 import detailMix from "@/mixins/detail";
@@ -83,7 +83,7 @@ export default {
   name: "EditPage",
   components: {
     commonHeader,
-    PropertyConfig,
+    ConfigCenter,
     materialList,
     mainScreen,
   },
@@ -212,6 +212,9 @@ export default {
   ::v-deep {
     .drag-box__content {
       overflow: hidden;
+    }
+    .drag-box__icon {
+      z-index: 999;
     }
   }
 }

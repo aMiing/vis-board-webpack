@@ -19,11 +19,9 @@ export default {
     ...mapMutations("editor", ["updateId", "useElements", "useScreen"]),
     async fetchData(id) {
       const data = await localforage.getItem(id);
-      if (data) {
-        const { screen = {}, elements = [] } = data;
-        this.useScreen(screen);
-        this.useElements(elements);
-      }
+      const { screen = {}, elements = [] } = data || {};
+      this.useScreen(screen);
+      this.useElements(elements);
     },
   },
 };
