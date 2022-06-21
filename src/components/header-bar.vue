@@ -67,10 +67,6 @@ export default {
   },
   computed: {
     ...mapGetters("user", ["getUserInfo"]),
-    ...mapGetters("editor", {
-      screen: "screenData",
-      changed: "changed",
-    }),
     ...mapGetters("history", ["isFirstHistory", "noNeedBeSave", "canRedo", "canUndo"]),
     isEdit() {
       return this.$route?.name === "edit";
@@ -96,6 +92,21 @@ export default {
       await this.saveData();
       this.$message.success("保存成功！");
     },
+    onKeydown(e) {
+      if (e.ctrlKey || e.metaKey) {
+        if (e.shiftKey && e.key === "z") {
+          this.canRedo && this.redo();
+        } else if (e.key === "z") {
+          // 这就是为什么要始终返回值，应为如果不返回，Promise会自动返回一个undefined，data就会被赋值，然后页面出问题
+          this.canUndo && this.undo();
+        }
+      }
+    },
+  },
+  mounted() {
+    window.addEventListener("keydown", this.onKeydown);
+    // 利用hook，在监听的地方解绑监听
+    this.$once("hook:beforeDestroy", () => window.removeEventListener("keydown", this.onKeydown));
   },
 };
 </script>

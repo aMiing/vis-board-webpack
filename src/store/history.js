@@ -62,7 +62,7 @@ const actions = {
   async undo({ commit, dispatch, state }) {
     commit("isUndoOperator", true);
     if (state.historyQueue.length) {
-      dispatch(
+      await dispatch(
         "editor/updateFromDiff",
         { history: state.historyQueue.at(-1), next: false },
         { root: true }
@@ -73,9 +73,14 @@ const actions = {
   async redo({ commit, dispatch, state }) {
     commit("isUndoOperator", false);
     // 向前一步
-    const history = state.redoQueue.at(-1);
-    commit("removeRedo");
-    await dispatch("editor/updateFromDiff", { history, next: true }, { root: true });
+    if (state.redoQueue.length) {
+      await dispatch(
+        "editor/updateFromDiff",
+        { history: state.redoQueue.at(-1), next: true },
+        { root: true }
+      );
+      commit("removeRedo");
+    }
   },
 };
 

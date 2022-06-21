@@ -99,8 +99,8 @@ const actions = {
         // diffType: 删除 (-)、新增 (+)、更改的子对象 (~) 或未更改的 (' ')
         const [diffType, data] = diff[index];
         if (diffType === "~") {
-          Object.keys(data).forEach(async key => {
-            await commit("updateElementProp", { index, key, val: data[key][target] });
+          Object.keys(data).forEach(key => {
+            commit("updateElementProp", { index, key, val: data[key][target] });
           });
         } else if (diffType === "+") {
           next ? commit("pushElements", [data]) : commit("popElement");
