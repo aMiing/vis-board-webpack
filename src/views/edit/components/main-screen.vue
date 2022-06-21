@@ -14,8 +14,8 @@
       :parent="true"
       :grid="[20, 20]"
       :rotatable="true"
-      :w="item.width + 2"
-      :h="item.height + 2"
+      :w="item.width"
+      :h="item.height"
       :x="item.posX"
       :y="item.posY"
       :r="item.romate"
@@ -121,8 +121,8 @@ export default {
     resizestop({ x, y, w, h }, item) {
       item.posX = x;
       item.posY = y;
-      item.width = w - 2;
-      item.height = h - 2;
+      item.width = w;
+      item.height = h;
     },
     dragover(event) {
       // 阻止浏览器的默认事件
@@ -203,11 +203,10 @@ export default {
   cursor: pointer;
   touch-action: none;
   position: absolute;
-  box-sizing: border-box;
-  border: 1px dashed;
-  // &.active {
-  //   border: 1px dashed;
-  // }
+  box-sizing: content-box;
+  &.active {
+    border: 1px dashed;
+  }
 }
 
 .ref-line {
