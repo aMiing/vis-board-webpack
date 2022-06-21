@@ -15,14 +15,20 @@
       <div class="size item">
         <label for="" class="item-label">字体大小</label>
         <div class="slider-box">
-          <el-slider :min="1" v-model="data.fontSize"></el-slider>
+          <el-slider :min="1" v-model="fontSize" @change="fontSizeChange"></el-slider>
         </div>
       </div>
 
       <div class="weight item">
         <label for="" class="item-label">字体粗细</label>
         <div class="slider-box">
-          <el-slider v-model="data.fontWeight" :step="10" :min="300" :max="800"></el-slider>
+          <el-slider
+            v-model="fontWeight"
+            :step="10"
+            :min="300"
+            :max="800"
+            @change="fontWeightChange"
+          ></el-slider>
         </div>
       </div>
 
@@ -62,9 +68,18 @@ export default {
           label: "等线",
         },
       ],
+      fontSize: this.$props?.data?.fontSize || 12,
+      fontWeight: this.$props?.data?.fontWeight || 400,
     };
   },
-  methods: {},
+  methods: {
+    fontSizeChange(val) {
+      this.data.fontSize = val;
+    },
+    fontWeightChange(val) {
+      this.data.fontWeight = val;
+    },
+  },
 };
 </script>
 <style scoped lang="scss"></style>
