@@ -25,6 +25,7 @@
       :lock-aspect-ratio="lockRatio"
       :snap="true"
       :snapTolerance="15"
+      :scale-ratio="scale"
       @activated="onActivated(item)"
       @deactivated="onDeactivated(item)"
       @resizestop="(x, y, w, h) => resizestop({ x, y, w, h }, item)"
