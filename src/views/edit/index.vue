@@ -1,5 +1,5 @@
 <template>
-  <div class="edit-page">
+  <div class="edit-page" @click.stop="contextmenuHide">
     <!-- 左侧区域 -->
     <!-- <div class="left-config__panel">
       <g-drag-box
@@ -16,6 +16,7 @@
     </div> -->
 
     <!-- 中心舞台 -->
+    <context-menu ref="menuRef" style="position: relative"></context-menu>
     <div class="stage-center">
       <div class="screen-content">
         <div class="screen-scroll-box">
@@ -26,6 +27,7 @@
               :elements="elements"
               @updateParentStyle="updateParentStyle"
               @onActivated="onWidgetActivated"
+              @handleContextmenuCallback="handleContextmenuCallback"
             />
           </div>
         </div>
@@ -78,6 +80,7 @@ import mainScreen from "./components/main-screen";
 import detailMix from "@/mixins/detail";
 import { mapActions, mapMutations } from "vuex";
 import { debounce, cloneDeep } from "lodash";
+import contextMenu from "@/components/contxtMenu";
 
 export default {
   name: "EditPage",
@@ -86,6 +89,7 @@ export default {
     ConfigCenter,
     materialList,
     mainScreen,
+    contextMenu,
   },
   mixins: [detailMix],
   data() {
@@ -152,11 +156,16 @@ export default {
       this.updateParentStyle(this.scale);
     },
     onWidgetActivated(ele) {
-      // console.log("onWidgetActivated");
       if (ele) {
         this.activatedEl = ele;
         this.clickTarget = "widget";
       } else this.clickTarget = "screen";
+    },
+    handleContextmenuCallback(e) {
+      this.$refs.menuRef.show(e);
+    },
+    contextmenuHide() {
+      this.$refs.menuRef.show(false);
     },
   },
 };
@@ -217,5 +226,9 @@ export default {
       z-index: 999;
     }
   }
+}
+.menuClass {
+  position: relative;
+  display: block;
 }
 </style>

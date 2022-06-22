@@ -33,5 +33,9 @@ body {
     right: 0;
     background: var(--grey-1);
   }
+
+  .popover {
+    padding: 8px 0;
+  }
 }
 </style>

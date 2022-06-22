@@ -6,6 +6,7 @@
     @click="switchSettingType()"
     @dragover="dragover"
     @drop="drop"
+    @contextmenu.prevent="e => $emit('handleContextmenuCallback', e)"
   >
     <vdr
       v-for="item in elements"
@@ -144,10 +145,11 @@ export default {
     },
 
     onActivated(widget) {
+      this.$emit("handleContextmenuCallback");
       // this.$emit("onActivated", widget);
     },
     onDeactivated(widget) {
-      // console.log("widget onDeactivated", widget);
+      this.$emit("handleContextmenuCallback");
       // this.$emit("onActivated", null);
     },
     onDrag(x, y, item) {
