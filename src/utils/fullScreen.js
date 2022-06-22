@@ -13,7 +13,7 @@ class fullScreen {
    * @param {String} domName 要全屏的dom名称
    */
   Fullscreen(domName) {
-    const element = document.querySelector(domName);
+    const element = typeof domName === "string" ? document.querySelector(domName) : domName;
     const methodName =
       this.prefixName === "" ? "requestFullscreen" : `${this.prefixName}RequestFullScreen`;
     element[methodName]();

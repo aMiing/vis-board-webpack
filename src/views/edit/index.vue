@@ -33,8 +33,12 @@
         </div>
         <!-- 缩放控制器 -->
         <div class="screen-content__operations">
+          <g-operation-group :options="btnList" :iconOnly="true"></g-operation-group>
+          <!-- <el-link :underline="false" @click="fullScreen">
+            <i class="iconfont icon-full_screen"></i>
+          </el-link> -->
           <el-link :underline="false" @click="addScale(-1)">
-            <i class="iconfont icon-pinleijianshao_o"></i>
+            <i class="iconfont icon-shanchu-fangkuang"></i>
           </el-link>
           <div class="scale-slider-wrap">
             <el-slider
@@ -49,7 +53,7 @@
             <div class="scale-value">{{ scale.toFixed(2) }}</div>
           </div>
           <el-link :underline="false" @click="addScale(1)">
-            <i class="iconfont icon-pinleizengjia_o"></i>
+            <i class="iconfont icon-tianjia-fangkuang"></i>
           </el-link>
         </div>
       </div>
@@ -86,7 +90,7 @@ import detailMix from "@/mixins/detail";
 import { mapActions, mapMutations } from "vuex";
 import { debounce, cloneDeep } from "lodash";
 import contextMenu from "@/components/contxtMenu";
-
+import fullScreen from "@/utils/fullScreen.js";
 export default {
   name: "EditPage",
   components: {
@@ -105,6 +109,14 @@ export default {
       activatedEl: null, //当前激活的组件
       clickTarget: "screen",
       propsData: {},
+      fullInstance: null,
+      btnList: [
+        {
+          name: "全屏",
+          iconClass: "iconfont icon-full_screen",
+          click: () => this.fullScreen(),
+        },
+      ],
     };
   },
   computed: {
@@ -136,6 +148,9 @@ export default {
   mounted() {
     this.$nextTick(() => {
       this.stageResize();
+    });
+    this.fullInstance = new fullScreen(() => {
+      console.log("不支持全屏");
     });
   },
   methods: {
@@ -175,6 +190,10 @@ export default {
     addScale(plusMinus) {
       const newScale = this.scale + 0.1 * plusMinus;
       this.handleScaleChange(newScale);
+    },
+    fullScreen() {
+      const main = this.$refs["main-screen"].$el;
+      this.fullInstance.Fullscreen(main);
     },
   },
 };
@@ -216,7 +235,7 @@ export default {
       font-size: 12px;
       color: var(--grey-10);
       .iconfont {
-        font-size: 20px;
+        font-size: 16px;
       }
       .scale-slider-wrap {
         width: 30%;

@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "4425814",
+      "name": "添加-方框",
+      "font_class": "tianjia-fangkuang",
+      "unicode": "e790",
+      "unicode_decimal": 59280
+    },
+    {
+      "icon_id": "4425816",
+      "name": "删除-方框",
+      "font_class": "shanchu-fangkuang",
+      "unicode": "e791",
+      "unicode_decimal": 59281
+    },
+    {
       "icon_id": "22385670",
       "name": "拆分",
       "font_class": "chaifen",
