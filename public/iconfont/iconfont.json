@@ -6,6 +6,48 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "22385670",
+      "name": "拆分",
+      "font_class": "chaifen",
+      "unicode": "ee21",
+      "unicode_decimal": 60961
+    },
+    {
+      "icon_id": "5879114",
+      "name": "组合",
+      "font_class": "zuhe",
+      "unicode": "e62b",
+      "unicode_decimal": 58923
+    },
+    {
+      "icon_id": "4922583",
+      "name": "全屏",
+      "font_class": "full_screen",
+      "unicode": "e673",
+      "unicode_decimal": 58995
+    },
+    {
+      "icon_id": "16322777",
+      "name": "全屏",
+      "font_class": "quanping",
+      "unicode": "e6f5",
+      "unicode_decimal": 59125
+    },
+    {
+      "icon_id": "5387883",
+      "name": "品类减少_o",
+      "font_class": "pinleijianshao_o",
+      "unicode": "eb7e",
+      "unicode_decimal": 60286
+    },
+    {
+      "icon_id": "5387886",
+      "name": "品类增加_o",
+      "font_class": "pinleizengjia_o",
+      "unicode": "eb7f",
+      "unicode_decimal": 60287
+    },
+    {
       "icon_id": "4800124",
       "name": "右上角",
       "font_class": "youshangjiao",

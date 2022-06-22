@@ -33,7 +33,9 @@
         </div>
         <!-- 缩放控制器 -->
         <div class="screen-content__operations">
-          <div class="scale-label">缩放比例</div>
+          <el-link :underline="false" @click="addScale(-1)">
+            <i class="iconfont icon-pinleijianshao_o"></i>
+          </el-link>
           <div class="scale-slider-wrap">
             <el-slider
               v-model="scale"
@@ -44,8 +46,11 @@
               :marks="{ 1: '' }"
               @change="handleScaleChange"
             ></el-slider>
+            <div class="scale-value">{{ scale.toFixed(2) }}</div>
           </div>
-          <div class="scale-value">{{ scale.toFixed(2) }}</div>
+          <el-link :underline="false" @click="addScale(1)">
+            <i class="iconfont icon-pinleizengjia_o"></i>
+          </el-link>
         </div>
       </div>
     </div>
@@ -167,6 +172,10 @@ export default {
     contextmenuHide() {
       this.$refs.menuRef.show(false);
     },
+    addScale(plusMinus) {
+      const newScale = this.scale + 0.1 * plusMinus;
+      this.handleScaleChange(newScale);
+    },
   },
 };
 </script>
@@ -206,14 +215,22 @@ export default {
       line-height: 36px;
       font-size: 12px;
       color: var(--grey-10);
+      .iconfont {
+        font-size: 20px;
+      }
       .scale-slider-wrap {
         width: 30%;
         max-width: 240px;
         min-width: 100px;
-      }
-      .scale-value {
-        padding: 0 8px;
-        width: 50px;
+        display: flex;
+        padding: 0 4px;
+        .el-slider {
+          flex: 1;
+        }
+        .scale-value {
+          padding-left: 8px;
+          // width: 50px;
+        }
       }
     }
   }
