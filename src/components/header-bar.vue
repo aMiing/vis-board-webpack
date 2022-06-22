@@ -38,9 +38,6 @@ export default {
     isEdit() {
       return this.$route?.name === "edit";
     },
-    id() {
-      return this.$route?.query?.id;
-    },
   },
   methods: {
     //退出登录

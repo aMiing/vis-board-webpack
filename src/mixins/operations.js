@@ -32,13 +32,17 @@ const operations = {
         {
           name: "预览",
           iconClass: "iconfont icon-yulan",
-          click: row => console.log(row),
+          click: row => this.preview(),
         },
       ],
     };
   },
   computed: {
     ...mapGetters("history", ["isFirstHistory", "noNeedBeSave", "canRedo", "canUndo"]),
+
+    id() {
+      return this.$route?.query?.id;
+    },
   },
   methods: {
     ...mapActions("editor", ["saveData"]),
@@ -47,6 +51,14 @@ const operations = {
     async save() {
       await this.saveData();
       this.$message.success("保存成功！");
+    },
+    preview() {
+      this.$router.push({
+        name: "preview",
+        query: {
+          id: this.id,
+        },
+      });
     },
   },
 };

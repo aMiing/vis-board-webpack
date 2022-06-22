@@ -87,10 +87,10 @@ import ConfigCenter from "./components/ConfigCenter";
 import materialList from "./components/material";
 import mainScreen from "./components/main-screen";
 import detailMix from "@/mixins/detail";
+import fullScreenMix from "@/mixins/fullScreen.js";
 import { mapActions, mapMutations } from "vuex";
 import { debounce, cloneDeep } from "lodash";
 import contextMenu from "@/components/contxtMenu";
-import fullScreen from "@/utils/fullScreen.js";
 export default {
   name: "EditPage",
   components: {
@@ -100,7 +100,7 @@ export default {
     mainScreen,
     contextMenu,
   },
-  mixins: [detailMix],
+  mixins: [detailMix, fullScreenMix],
   data() {
     return {
       currentType: "screen",
@@ -109,7 +109,6 @@ export default {
       activatedEl: null, //当前激活的组件
       clickTarget: "screen",
       propsData: {},
-      fullInstance: null,
       btnList: [
         {
           name: "全屏",
@@ -149,9 +148,6 @@ export default {
     this.$nextTick(() => {
       this.stageResize();
     });
-    this.fullInstance = new fullScreen(() => {
-      console.log("不支持全屏");
-    });
   },
   methods: {
     ...mapActions("editor", ["recordDataChange"]),
@@ -190,10 +186,6 @@ export default {
     addScale(plusMinus) {
       const newScale = this.scale + 0.1 * plusMinus;
       this.handleScaleChange(newScale);
-    },
-    fullScreen() {
-      const main = this.$refs["main-screen"].$el;
-      this.fullInstance.Fullscreen(main);
     },
   },
 };
