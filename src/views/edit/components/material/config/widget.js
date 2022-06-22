@@ -16,7 +16,7 @@ export const widgetGroup = [
       },
       {
         label: "多行文本",
-        name: "linesText",
+        name: "multilineText",
         img: require("@/assets/widgets/linesText.png"),
       },
       {

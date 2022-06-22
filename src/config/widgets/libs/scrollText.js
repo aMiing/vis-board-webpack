@@ -9,7 +9,7 @@ const ScrollTextConfig = {
     label: "尺寸",
     props: {
       width: 300,
-      height: 120,
+      height: 60,
       sizeUnit: "px",
     },
   },
