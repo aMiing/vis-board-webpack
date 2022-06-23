@@ -3,7 +3,7 @@ import App from "./App";
 import VCharts from "v-charts";
 import store from "@/store/index.js";
 import VueRouter from "vue-router";
-import routerList from "@/router/index.js";
+import routerList from "@/router/preview.js";
 import localforage from "localforage";
 import "./plugins";
 import "@/femc/themes/index";

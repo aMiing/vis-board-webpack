@@ -7,13 +7,7 @@ export default {
   computed: {
     ...mapGetters("editor", { screen: "screenData", elements: "getElements" }),
   },
-  async mounted() {
-    // 更新id
-    const id = this.$route?.query?.id;
-    this.updateId(id);
-    await this.fetchData(id);
-    this.startRecordHistory();
-  },
+  async mounted() {},
   methods: {
     ...mapMutations("history", ["startRecordHistory"]),
     ...mapMutations("editor", ["updateId", "useElements", "useScreen"]),

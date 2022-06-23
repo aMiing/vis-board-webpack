@@ -144,10 +144,15 @@ export default {
   created() {
     this.propsData = cloneDeep(this.screen);
   },
-  mounted() {
+  async mounted() {
     this.$nextTick(() => {
       this.stageResize();
     });
+    // 更新id
+    const id = this.$route?.query?.id;
+    this.updateId(id);
+    await this.fetchData(id);
+    this.startRecordHistory();
   },
   methods: {
     ...mapActions("editor", ["recordDataChange"]),

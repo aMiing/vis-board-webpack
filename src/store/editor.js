@@ -74,6 +74,12 @@ const actions = {
     // 更新saveTag
     commit("history/updateSaveTagId", null, { root: true });
   },
+  // 发布
+  async publishNow({ state }) {
+    const publishedId = UUID(32);
+    await localforage.setItem(publishedId, state);
+    return "/page/" + publishedId;
+  },
   addElements({ commit, state }, value) {
     commit("pushElements", [value]);
   },

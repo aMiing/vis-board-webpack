@@ -7,6 +7,7 @@
 
     <div v-if="isEdit" class="operations-group">
       <g-operation-group :options="btnList" :iconOnly="true"></g-operation-group>
+      <publish-dialog ref="publish-dialog"></publish-dialog>
     </div>
     <div class="userinfo">
       <el-dropdown trigger="hover">
@@ -23,8 +24,10 @@
 <script>
 import { mapGetters } from "vuex";
 import operationsMix from "@/mixins/operations.js";
+import publishDialog from "@/components/dialog/publish.vue";
 export default {
   name: "HeaderBar",
+  components: { publishDialog },
   mixins: [operationsMix],
   data() {
     return {

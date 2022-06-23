@@ -16,7 +16,7 @@ export default {
   },
   methods: {
     fullScreen() {
-      const main = this.$refs["preview-screen"] || this.$refs["main-screen"]?.$el;
+      const main = this.$refs["screen-content__wrap"];
       this.fullInstance.Fullscreen(main);
     },
     // 退出全屏 退出到上次的状态

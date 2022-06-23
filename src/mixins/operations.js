@@ -27,7 +27,7 @@ const operations = {
         {
           name: "发布",
           iconClass: "iconfont icon-fabu",
-          click: row => console.log(row),
+          click: row => this.$refs["publish-dialog"].show(row),
         },
         {
           name: "预览",

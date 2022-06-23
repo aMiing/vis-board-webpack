@@ -1,19 +1,21 @@
 <template>
-  <div class="screen" ref="preview-screen" :style="screenConfig">
-    <div
-      v-for="item in elements"
-      :key="item.id"
-      class="component-wrap"
-      style="position: absolute"
-      :style="{
-        width: item.width + item.sizeUnit,
-        height: item.height + item.sizeUnit,
-        left: item.posX + item.positionUnit,
-        top: item.posY + item.positionUnit,
-        zIndex: item.zIndex,
-      }"
-    >
-      <component :key="item.id" :is="item.name" :data="transStyle(item)"></component>
+  <div class="screen-content__wrap" ref="screen-content__wrap">
+    <div class="screen" ref="preview-screen" :style="screenConfig">
+      <div
+        v-for="item in elements"
+        :key="item.id"
+        class="component-wrap"
+        style="position: absolute"
+        :style="{
+          width: item.width + item.sizeUnit,
+          height: item.height + item.sizeUnit,
+          left: item.posX + item.positionUnit,
+          top: item.posY + item.positionUnit,
+          zIndex: item.zIndex,
+        }"
+      >
+        <component :key="item.id" :is="item.name" :data="transStyle(item)"></component>
+      </div>
     </div>
   </div>
 </template>
@@ -29,6 +31,19 @@ export default {
   },
   data() {
     return {};
+  },
+  mounted() {
+    const pageName = this.$route?.name;
+    let id = this.$route?.query?.id;
+    const publishId = this.$route?.params?.publishId;
+    // 根据publishId 查询 screenId
+    if (pageName === "page" && publishId) {
+      id = publishId;
+    }
+    if (id) {
+      this.updateId(id);
+      this.fetchData(id);
+    }
   },
 
   computed: {
@@ -76,4 +91,15 @@ export default {
   },
 };
 </script>
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.screen-content__wrap {
+  position: relative;
+}
+.screen {
+  // margin: 0 auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+</style>
