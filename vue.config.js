@@ -1,6 +1,9 @@
 const path = require("path");
 module.exports = {
-  outputDir: "dist",
+  pages: {
+    index: "src/main.js",
+    preview: "src/preview.js",
+  },
   configureWebpack: {
     // devServer: {
     //   open: true,
