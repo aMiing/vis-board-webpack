@@ -31,7 +31,7 @@ body {
     bottom: 0px;
     left: 0;
     right: 0;
-    // background: var(--grey-1);
+    background: #000;
   }
 
   .popover {

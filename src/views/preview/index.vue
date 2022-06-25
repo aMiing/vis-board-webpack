@@ -1,6 +1,6 @@
 <template>
   <div class="screen-content__wrap" ref="screen-content__wrap">
-    <div class="screen" ref="preview-screen" :style="screenConfig">
+    <div class="main-screen" ref="main-screen" :style="screenConfig">
       <div
         v-for="item in elements"
         :key="item.id"
@@ -23,6 +23,7 @@
 import detailMix from "@/mixins/detail";
 import fullScreenMix from "@/mixins/fullScreen.js";
 import modules from "@/components/widgets/index.js";
+import { debounce } from "lodash";
 export default {
   name: "PreviewPage",
   mixins: [detailMix, fullScreenMix],
@@ -30,9 +31,11 @@ export default {
     ...modules,
   },
   data() {
-    return {};
+    return {
+      scale: 1,
+    };
   },
-  mounted() {
+  created() {
     const pageName = this.$route?.name;
     let id = this.$route?.query?.id;
     const publishId = this.$route?.params?.publishId;
@@ -45,6 +48,14 @@ export default {
       this.fetchData(id);
     }
   },
+  async mounted() {
+    console.log("mounted");
+    await this.$nextTick();
+    const debounceResize = debounce(this.stageResize, 300);
+    debounceResize();
+    window.addEventListener("resize", debounceResize);
+    this.$once("hook:beforeDestroy", () => window.removeEventListener("resize", debounceResize));
+  },
 
   computed: {
     screenConfig() {
@@ -54,14 +65,18 @@ export default {
         width: width + sizeUnit,
         height: height + sizeUnit,
         fontSize: fontSize + fontUnit,
-        transform: `scale(${this.scale}) translate(-${((1 / this.scale - 1) / 2) * 100}%, -${
-          ((1 / this.scale - 1) / 2) * 100
-        }%)`,
+        transform: `scale(${this.scale})`,
         transition: "all 0.3s",
       };
     },
   },
   methods: {
+    stageResize() {
+      const { width: parentWidth, height: parentHeight } =
+        this.$refs["screen-content__wrap"].getBoundingClientRect();
+      const { width, height } = this.screen;
+      this.scale = Math.min(parentWidth / width, parentHeight / height);
+    },
     transStyle(data) {
       const fontSize = data.fontSize && data.fontSize + (data?.fontUnit || "px");
       const borderWidth =
@@ -94,12 +109,13 @@ export default {
 <style scoped lang="scss">
 .screen-content__wrap {
   position: relative;
-}
-.screen {
-  // margin: 0 auto;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .main-screen {
+    position: absolute;
+  }
 }
 </style>

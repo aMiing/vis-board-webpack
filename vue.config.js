@@ -1,8 +1,9 @@
 const path = require("path");
 module.exports = {
   pages: {
+    // 多页面preview刷新页面的时候回有点问题
+    // preview: "src/preview.js",
     index: "src/main.js",
-    preview: "src/preview.js",
   },
   configureWebpack: {
     // devServer: {
