@@ -20,8 +20,8 @@ const getters = {
   getElements: state => {
     return state.elements;
   },
-  getSnapshotQueue: state => {
-    return state.snapshotQueue;
+  noElement: state => {
+    return state.elements.length === 0;
   },
 };
 const mutations = {

@@ -27,6 +27,8 @@ const operations = {
         {
           name: "发布",
           iconClass: "iconfont icon-fabu",
+          disabled: () => this.noElement,
+          reason: "没有可发布的内容",
           click: row => this.$refs["publish-dialog"].show(row),
         },
         {
@@ -38,8 +40,8 @@ const operations = {
     };
   },
   computed: {
-    ...mapGetters("history", ["isFirstHistory", "noNeedBeSave", "canRedo", "canUndo"]),
-
+    ...mapGetters("history", ["noNeedBeSave", "canRedo", "canUndo"]),
+    ...mapGetters("editor", ["noElement"]),
     id() {
       return this.$route?.query?.id;
     },

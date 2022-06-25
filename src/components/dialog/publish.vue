@@ -6,13 +6,20 @@
         type="info"
         :closable="false"
       ></el-alert>
-      <el-button type="primary" @click="publish">立即发布</el-button>
       <div v-show="url" class="link-wrap">
         <span>链接地址：</span>
-        <el-link :href="url" target="_blank">{{ url }}</el-link>
-        <el-link :underline="false">
+        <el-link :href="url" target="_blank" type="primary">{{ url }}</el-link>
+        <el-link
+          :underline="false"
+          class="copy-btn"
+          v-clipboard:copy="url"
+          v-clipboard:success="onCopy"
+        >
           <i class="iconfont icon-copy"></i>
         </el-link>
+      </div>
+      <div class="operations-box" slot="footer">
+        <el-button type="primary" @click="publish">立即发布</el-button>
       </div>
     </el-dialog>
   </div>
@@ -35,11 +42,22 @@ export default {
     },
     async publish() {
       const url = await this.publishNow();
-      console.log("url", url);
-      this.url = url;
+      const origin = location.origin;
+      this.url = origin + url;
     },
-    openNewTab(url) {},
+    onCopy() {
+      this.$message.success("已复制到剪切板");
+    },
   },
 };
 </script>
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.link-wrap {
+  display: flex;
+  padding: 16px 4px 4px;
+  align-items: center;
+  .copy-btn {
+    padding: 0 8px;
+  }
+}
+</style>

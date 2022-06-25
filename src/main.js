@@ -5,9 +5,12 @@ import store from "@/store/index.js";
 import VueRouter from "vue-router";
 import routerList from "@/router/index.js";
 import localforage from "localforage";
+import VueClipboard from "vue-clipboard2";
+
 import "./plugins";
 import "@/femc/themes/index";
 
+Vue.use(VueClipboard);
 localforage.config({ name: "vis-board" });
 Vue.use(VCharts);
 Vue.use(VueRouter);
