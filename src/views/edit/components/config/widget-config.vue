@@ -44,7 +44,7 @@ export default {
         },
         {
           name: "复制",
-          iconClass: "iconfont icon-CreateTask",
+          iconClass: "iconfont icon-copy",
           click: () => this.copy(),
         },
       ],
