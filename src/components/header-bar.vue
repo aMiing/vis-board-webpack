@@ -1,6 +1,6 @@
 <template>
   <div class="header-bar">
-    <div :span="4" class="logo-content">
+    <div :span="4" class="logo-content" @click="clickLogo">
       <span class="big-logo">{{ sysName }}</span>
       <span class="version">v1.0.0尝鲜版</span>
     </div>
@@ -63,6 +63,9 @@ export default {
         }
       }
     },
+    clickLogo() {
+      this.$router.replace({ name: "root" }).catch(() => {});
+    },
   },
   mounted() {
     window.addEventListener("keydown", this.onKeydown);
@@ -86,6 +89,7 @@ export default {
     // text-align: center;
     padding: 0 20px;
     flex: 1;
+    cursor: pointer;
     .big-logo {
       font-size: 20px;
     }
