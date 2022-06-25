@@ -144,6 +144,7 @@ export default {
         name,
         query: {
           id: row.id,
+          name: row?.title,
         },
       });
     },

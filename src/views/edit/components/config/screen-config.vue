@@ -1,6 +1,6 @@
 <template>
   <div class="setting-content">
-    <div class="screen-title">屏幕名称：{{ value.title || "--" }}</div>
+    <div class="screen-title">屏幕名称：{{ title || "--" }}</div>
     <div class="config-content">
       <attributesVue :model="value"></attributesVue>
     </div>
@@ -31,6 +31,11 @@ export default {
       config,
       screenShot,
     };
+  },
+  computed: {
+    title() {
+      return this.$route?.query?.name;
+    },
   },
   mounted() {
     // console.log("this.$attrs", this.$attrs);
