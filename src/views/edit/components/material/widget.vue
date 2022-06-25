@@ -49,7 +49,7 @@ export default {
       this.addElements(_widget);
     },
     getWidgetData(widget) {
-      const target = widgetsConfig[widget.name];
+      const target = widgetsConfig[widget.name] || {};
       const initConfig = Object.keys(target).reduce((total, e) => {
         return Object.assign(total, { ...(target[e]?.props || {}) });
       }, {});

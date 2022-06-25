@@ -27,6 +27,7 @@ export default {
     },
   },
   mounted() {
+    this.time = dayjs(new Date()).format(this.data.timeFormatter);
     this.timer = setInterval(() => {
       this.time = dayjs(new Date()).format(this.data.timeFormatter);
     }, this.refresh);

@@ -15,12 +15,21 @@
           </template>
         </el-form>
       </el-collapse-item>
+
+      <el-collapse-item title="组件配置" name="exclusive">
+        <el-form label-width="45px">
+          <template v-for="key in exclusiveProps">
+            <component :key="key" :is="getComponent(key)" :data="data"></component>
+          </template>
+        </el-form>
+      </el-collapse-item>
     </el-collapse>
   </div>
 </template>
 
 <script>
 import { BaseConfig } from "@/config/widgets/base.js";
+import widgetsConfig from "@/config/widgets/index";
 import componentTokens from "../tokens/index";
 export default {
   name: "Attributes",
@@ -34,12 +43,15 @@ export default {
   data() {
     return {
       BaseConfig,
+      widgetsConfig,
       activeNames: ["common"],
     };
   },
-  watch: {
-    data(val) {
-      console.log("this.data", val);
+  computed: {
+    exclusiveProps() {
+      return (
+        Object.keys(this.widgetsConfig[this.data?.name])?.filter(e => !this.BaseConfig[e]) || []
+      );
     },
   },
   methods: {

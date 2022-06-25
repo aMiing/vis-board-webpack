@@ -1,9 +1,9 @@
 <template>
   <el-form-item label="变换">
     <div class="form-item-content">
-      <div v-if="typeof data.romate === 'number'" class="item">
+      <div v-if="typeof data.rotate === 'number'" class="item">
         <label class="item-label">旋转</label>
-        <el-input-number v-model="data.romate" :min="0" :max="360"></el-input-number>
+        <el-input-number v-model="data.rotate" :min="0" :max="360"></el-input-number>
       </div>
       <div v-if="typeof data.scale === 'number'" class="item">
         <label class="item-label">缩放</label>
