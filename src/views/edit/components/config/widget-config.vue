@@ -15,7 +15,7 @@
     </div>
 
     <div class="element-operations-group">
-      <g-operation-group :options="btnList" :iconOnly="true"></g-operation-group>
+      <g-operation-group :options="componentOperationList" :iconOnly="true"></g-operation-group>
     </div>
   </div>
 </template>
@@ -36,7 +36,7 @@ export default {
   data() {
     return {
       activeTab: "style",
-      btnList: [
+      componentOperationList: [
         {
           name: "删除",
           iconClass: "iconfont icon-shanchu",

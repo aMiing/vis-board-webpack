@@ -1,8 +1,12 @@
 import { mapGetters, mapActions, mapMutations } from "vuex";
+const themeIconMap = {
+  light: "icon-qiansemoshi",
+  dark: "icon-shensemoshi",
+};
 const operations = {
   data() {
     return {
-      btnList: [
+      editorBtnList: [
         {
           name: "保存",
           iconClass: "iconfont icon-baocun",
@@ -42,17 +46,34 @@ const operations = {
   computed: {
     ...mapGetters("history", ["noNeedBeSave", "canRedo", "canUndo"]),
     ...mapGetters("editor", ["noElement"]),
+    ...mapGetters("common", { theme: "getTheme" }),
     id() {
       return this.$route?.query?.id;
+    },
+
+    commonBtnList() {
+      return [
+        {
+          name: "切换主题",
+          iconClass: "iconfont " + themeIconMap[this.theme],
+          click: () => this.switchTheme(),
+        },
+      ];
     },
   },
   methods: {
     ...mapActions("editor", ["saveData"]),
     ...mapActions("history", { undo: "undo", redo: "redo" }),
+    ...mapActions("common", ["updateTheme"]),
 
     async save() {
       await this.saveData();
       this.$message.success("保存成功！");
+    },
+    switchTheme() {
+      const themeList = Object.keys(themeIconMap);
+      const index = themeList.findIndex(e => e === this.theme);
+      this.updateTheme(themeList[index ^ 1]);
     },
     preview() {
       this.$router.push({

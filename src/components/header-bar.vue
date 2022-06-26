@@ -5,19 +5,22 @@
       <span class="version">v1.0.0尝鲜版</span>
     </div>
 
-    <div v-if="isEdit" class="operations-group">
-      <g-operation-group :options="btnList" :iconOnly="true"></g-operation-group>
+    <div v-if="isEdit" class="edit-header_content">
+      <g-operation-group :options="editorBtnList" :iconOnly="true"></g-operation-group>
       <publish-dialog ref="publish-dialog"></publish-dialog>
     </div>
-    <div class="userinfo">
-      <el-dropdown trigger="hover">
-        <span class="el-dropdown-link userinfo-inner">欢迎你 {{ getUserInfo.userName }}</span>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>个人信息</el-dropdown-item>
-          <el-dropdown-item>修改密码</el-dropdown-item>
-          <el-dropdown-item @click.native="logout">退出登录</el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
+    <div v-else class="common-header_content">
+      <g-operation-group :options="commonBtnList" :iconOnly="true"></g-operation-group>
+      <div class="userinfo">
+        <el-dropdown trigger="hover">
+          <span class="el-dropdown-link userinfo-inner">欢迎你 {{ getUserInfo.userName }}</span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item>个人信息</el-dropdown-item>
+            <el-dropdown-item>修改密码</el-dropdown-item>
+            <el-dropdown-item @click.native="logout">退出登录</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
     </div>
   </div>
 </template>
@@ -68,6 +71,7 @@ export default {
     },
   },
   mounted() {
+    this.updateTheme();
     window.addEventListener("keydown", this.onKeydown);
     // 利用hook，在监听的地方解绑监听
     this.$once("hook:beforeDestroy", () => window.removeEventListener("keydown", this.onKeydown));
@@ -82,7 +86,7 @@ export default {
   line-height: 36px;
   z-index: 99;
   background: var(--grey-8);
-  color: #fff;
+  color: var(--color-text-1);
   display: flex;
   justify-content: space-between;
   .logo-content {
@@ -94,26 +98,26 @@ export default {
       font-size: 20px;
     }
   }
-  .operations-group {
+  .edit-header_content {
     text-align: right;
-    // padding: 0 12px;
-  }
-  .userinfo {
     padding: 0 12px;
-    .userinfo-inner {
-      cursor: pointer;
-      color: #fff;
-      img {
-        width: 20px;
-        height: 20px;
-        border-radius: 10px;
-        margin: 5px;
-        float: right;
+  }
+  .common-header_content {
+    display: flex;
+
+    .userinfo {
+      padding: 0 12px;
+      .userinfo-inner {
+        cursor: pointer;
+        img {
+          width: 20px;
+          height: 20px;
+          border-radius: 10px;
+          margin: 5px;
+          float: right;
+        }
       }
     }
-  }
-  .logo-collapse {
-    width: 60px;
   }
 }
 </style>

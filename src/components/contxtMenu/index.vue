@@ -10,7 +10,7 @@
   >
     <span slot="reference"></span>
     <div
-      v-for="(btn, index) in btnList"
+      v-for="(btn, index) in editorBtnList"
       :key="index"
       class="expand-item"
       :disabled="isDisabled(btn)"

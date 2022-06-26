@@ -1,29 +1,3 @@
-# vis-board-webpack
-
-## Project setup
-
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-
-```
-npm run build
-```
-
-### Lints and fixes files
-
-```
-npm run lint
-```
-
 ### TODO lIST
 
 - [ ] ~~主舞台缩放比例范围扩大到 2 倍~~
@@ -37,12 +11,12 @@ npm run lint
 - [ ] bug: 拖动超出屏幕之后，组件内部会触发属性修正，会被异常加入到历史记录中
 - [x] 全屏功能
 - [x] 预览功能
-- [ ] 发布与分享
+- [x] 发布与分享
+- [ ] bug: 预览界面刷新路由无法跳转
 - [ ] **代码导出功能**（[参考](https://github.com/vuegg/vuegg)）
+- [x] 一键换肤
 
   > vuegg 的导出功能是吧整个工程的源码导出来，不适合我们的场景。
-
-- [] 一键换肤
 
   #### undo\redo 思路
 
@@ -73,3 +47,12 @@ vue-drag-resize-rotate 组件的坑：
 <!-- ### 数据变更（解耦） -->
 
 <!-- 属性配置面板数据变化之后应该作为一次 commit 提交到 store， store 更新数据触发主舞台预览 -->
+
+### 开发指南
+
+1. 依赖安装
+   npm run install
+2. 启动
+   npm run dev
+3. deployed
+   npm run build
